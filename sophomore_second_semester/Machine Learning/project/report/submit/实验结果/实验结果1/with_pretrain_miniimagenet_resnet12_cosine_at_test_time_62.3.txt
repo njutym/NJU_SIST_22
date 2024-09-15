@@ -1,0 +1,18 @@
+ python eval.py -metric cosine
+{'backbone_name': 'resnet12',
+ 'data_dir': '/mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine '
+             'Learning/project/dataset/miniImageNet--ravi',
+ 'dataset_name': 'miniimagenet',
+ 'gpu': '0',
+ 'metric': 'cosine',
+ 'pretrain_dir': '/mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine '
+                 'Learning/project/DiffKendall-master/Models/Res12-pre.pth',
+ 'query': 15,
+ 'shot': 1,
+ 'test_episode': 2000,
+ 'way': 5}
+use gpu: [0]
+loading model from : /mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine Learning/project/DiffKendall-master/Models/Res12-pre.pth
+  0%|                                                                                                                                 | 0/2000 [00:00<?, ?it/s]/home/tianyongming/anaconda3/envs/libfewshot/lib/python3.10/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at /opt/conda/conda-bld/pytorch_1712608839953/work/aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+batch 2000: This episode:52.00  average: 62.3920+0.4407: 100%|█████████████████████████████████████████████████████████████| 2000/2000 [22:45<00:00,  1.46it/s]

@@ -1,0 +1,133 @@
+% 作业模板
+\documentclass[UTF8,10pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{graphicx}
+% \catcode`\。=\active
+% \newcommand{。}{．}
+\newcommand{\CourseName}{数理逻辑}
+\newcommand{\Semester}{2023-2024学年第二学期}
+\newcommand{\ProjectName}{作业 1}
+\newcommand{\DueTimeType}{完成日期}
+\newcommand{\DueTime}{\today}
+\newcommand{\StudentName}{田永铭}
+\newcommand{\StudentID}{221900180}
+\usepackage[vmargin=1in,hmargin=.5in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{calc}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\CourseName}
+\fancyhead[C]{\ProjectName}
+\fancyhead[R]{\StudentName}
+\fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\setlength\headheight{12pt}
+\fancypagestyle{FirstPageStyle}{
+	\fancyhf{}
+	\fancyhead[L]{\CourseName\\
+		\Semester}
+	\fancyhead[C]{{\Huge\bfseries\ProjectName}\\
+		\DueTimeType\ : \DueTime}
+	\fancyhead[R]{姓名 : \makebox[\widthof{\StudentID}][s]{\StudentName}\\
+		学号 : \StudentID\\
+		成绩 :\makebox[\widthof{\StudentID}]{}}
+	\fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+	\setlength\headheight{36pt}
+}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\allowdisplaybreaks[4]
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{.}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+\newtheorem{prob}{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+% \usepackage{graphicx}
+
+
+\begin{document}
+	\thispagestyle{FirstPageStyle}
+	
+	\begin{prob}
+		
+	\end{prob}
+	
+	\begin{sol} 
+	设$p$表示鱼大，q表示鱼刺大，r表示鱼肉少。则可以形式化为：\\
+	1.p $\rightarrow$ q\\
+	2.q $\rightarrow$ r\\
+	3.r $\rightarrow$ $\neg$p\\
+	4.p $\rightarrow$ $\neg$p\\
+	步骤中非有效的点：
+	\begin{enumerate}
+		\item 第一句鱼的大小与于此大小无直接因果关系，仅能说同种鱼在同种环境条件下可能鱼越大，鱼刺越大。可以找到极端例子是的第一句前件真，后件假。
+		\item 步骤2、3同样不具有有效性。能找到两种鱼，A的鱼刺\textgreater B的鱼刺，但A的肉\textgreater B的肉；也有肉少但体积大的鱼。
+	\end{enumerate}
+	故每一步均非有效。
+	\end{sol}
+	
+	\begin{prob}
+		
+	\end{prob}
+	
+	\begin{sol} 
+		{\bf 先证除了长度为2、3、6的合式公式都存在} $\forall$的单个命题符号长度为1，一元联结词$\neg$使得公式长度增加3(含括号)。设$A_1$、$A_2$为长度是1的命题符号，则$A_1,(A_1 \cap A_2),((A_1 \cap A_2) \cap A_2)$分别为长度是1，4，9的合式公式。结合取反长度就+3，可构造出长度为
+		\begin{equation}
+			\left\{
+			\begin{aligned}
+					length&=1,4,7...\\
+					length&=5,8,11...\\
+					length&=9,12,15...
+			\end{aligned}
+			\right.
+			\end{equation}的合式公式。\\
+		显然，除了2、3、6以外的长度的公式均已被包含，所以存在。
+		
+		{\bf 再证长度为2、3、6的合式公式都不存在} 设性质F(x)表示x这个合式公式长度并非2、3、6。假设$\alpha$,$\beta$满足F($\alpha$),F($\beta$),$\neg\alpha$,$(\alpha \star \beta)$($\star$表示二元联结词)长度显然不为2、3。假设二者中有长度为6的，可直接推出$\alpha$长度为3或者$\alpha$与$\beta$长度之和为3，这均不成立，所以假设不成立。所以长度为2、3、6的合式公式必不存在。
+	\end{sol}
+	
+	\begin{prob}
+		
+	\end{prob}
+	
+	\begin{sol}
+		\begin{enumerate}
+			\item {\bf 奠基} 当$c = 0$时，无二元联结词，$\alpha$中命题符号只可能出现1次数(0次的话不是wff)，形如A或者$\neg$A,所以$s = 1$,所以$s = c + 1$成立。
+			\item {\bf 归纳假设} 假设当$c = k$的时候，$s = c + 1 = k + 1$。
+			\item {\bf 归纳} 当$c = k + 1$的时候，表示在$ c = k$ 的基础上增加了1个二元联结词。设增加前的合式公式为$\alpha$,增加后为$\alpha^\prime$。不妨设增加的二元联结词为$\cap$,则变化为 $\alpha^\prime = (\alpha \cap A)$,其中A为命题符号。所以$s = (k+1)+1 = k + 2 = c + 1$。		
+		\end{enumerate}
+		所以$s = c + 1$得证。
+	\end{sol}
+
+	\begin{prob}
+		
+	\end{prob}
+	
+	\begin{sol}
+		\begin{enumerate}
+			\item {\bf 先证S中的$\forall$一个合式公式$\alpha$均在$S^\prime$中，即可以由$S^\prime$构造出$\alpha$:} 由S在5种运算下的封闭性可知:$\alpha$可以由S中的各个公式构造出来，$S^\prime$只需要依次构造即可。具体来说，若S由形如$A \star B$($\star$ 表示二元联结词)，则可以讲A与B的构造序列进行拼接，并添加新元素$A \star B$，得到新的构造序列，依此可以构造出$\alpha$。而取否这样的变化亦是如此。
+			\item {\bf 再证$S^\prime$中的所有构造序列产生的结论$\alpha$,均在S中:} 采用反证法:假设$S^\prime$中可构造出合式公式$\beta$，且$\beta$不在S中，而$S^\prime$构造又满足定义1.4的条件，即合法。那么这与S本身定义关于五种公式构造封闭相矛盾。所以$S^\prime$构造出的$\alpha$必在S中。
+		\end{enumerate}
+		综上:得证。
+	\end{sol}
+
+
+\end{document}

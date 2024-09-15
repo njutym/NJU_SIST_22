@@ -1,0 +1,17 @@
+TY  - JOUR
+A2  - Maddikunta, Praveen Kumar Reddy
+AU  - Liang, Hai
+AU  - Li, Jiaqi
+PY  - 2022
+DA  - 2022/07/31
+TI  - A Study on the Agent in Fighting Games Based on Deep Reinforcement Learning
+SP  - 9984617
+VL  - 2022
+AB  - In this study, an end-to-end noninvasive frame system available for varieties of complete information games was first implemented. After altering some codes, the system can be rapidly and effectively applied in a series of complete information games (e.g., NI-OH, The King of Fighters, and Maple Story), other than the fighting games. The fighting game Street Fighter V was selected as the experimental subject to explore the behavioral strategies of the agent in fighting games and verify both the intelligence and validity of deep reinforcement learning in the games. During the experiment, a double deep-Q network (DDQN) was adopted to train the agent in the form of fighting against in-game AI. In this process, 2590 rounds of agent training were conducted, generating a winning rate of nearly 95&#x0025;. Then, the trained model underwent a series of tests, achieving winning rates of 100&#x0025; (10 rounds), 90&#x0025; (30 rounds), and 96&#x0025; (50 rounds).
+SN  - 1574-017X
+UR  - https://doi.org/10.1155/2022/9984617
+DO  - 10.1155/2022/9984617
+JF  - Mobile Information Systems
+PB  - Hindawi
+KW  - 
+ER  - 

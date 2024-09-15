@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {一、}实验要求}{2}{section.1}%
+\contentsline {section}{\numberline {二、}实验环境}{2}{section.2}%
+\contentsline {section}{\numberline {三、}实验原理}{2}{section.3}%
+\contentsline {section}{\numberline {四、}实验过程}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}实现单线程MC算法求$\pi $值}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}实现多线程MC算法求$\pi $值}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}提供使用-t来传线程数的服务}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}编写makefile，方便运行}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}实现格式化输出和绘图代码}{7}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}展示文件结构}{8}{subsection.4.6}%
+\contentsline {section}{\numberline {五、}实验结果汇报}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}展示计算$\pi $的结果}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}程序需要支持命令行参数-t}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}了解GCC标准库提供的随机函数的实现，分析多线程程序性能的影响}{10}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}需结合自身硬件,分析不同的线程数程序的运行时间开销}{13}{subsection.5.4}%
+\contentsline {section}{\numberline {六、}总结与反思}{14}{section.6}%
+\contentsline {section}{\numberline {七、}其它参考文献}{14}{section.7}%

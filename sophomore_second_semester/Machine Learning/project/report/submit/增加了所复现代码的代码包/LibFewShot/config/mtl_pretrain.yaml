@@ -1,0 +1,75 @@
+include:
+  - headers/data.yaml
+  - headers/device.yaml
+  - headers/misc.yaml
+  - headers/model.yaml
+  - headers/optimizer.yaml
+  - backbones/Conv64F.yaml
+  - classifiers/MTL_pretrain.yaml
+
+way_num: 5
+shot_num: 1
+query_num: 15
+episode_size: 1
+train_episode: 10
+test_episode: 10
+
+
+backbone:
+  name: Conv64F
+  kwargs:
+    is_flatten: True
+    is_feature: False
+    leaky_relu: False
+    negative_slope: 0.2
+    last_pool: True
+
+classifier:
+  name: MTLPretrain
+  kwargs:
+    feat_dim: 1600
+    num_classes: 64
+    inner_param:
+      iter: 10
+
+
+# backbone:
+#   name: resnet12
+#   kwargs:
+#     keep_prob: 0.0
+
+# classifier:
+#   name: MTLPretrain
+#   kwargs:
+#     feat_dim: 640
+#     num_classes: 64
+#     inner_param:
+#       iter: 10
+
+
+# backbone:
+#   name: resnet18
+#   kwargs: ~
+
+# classifier:
+#   name: MTLPretrain
+#   kwargs:
+#     feat_dim: 512
+#     num_classes: 64
+#     inner_param:
+#       iter: 10
+
+
+# backbone:
+#   name: WRN
+#   kwargs:
+#     depth: 28
+#     widen_factor: 10
+
+# classifier:
+#   name: MTLPretrain
+#   kwargs:
+#     feat_dim: 640
+#     num_classes: 64
+#     inner_param:
+#       iter: 10

@@ -1,0 +1,76 @@
+includes:
+  - headers/data.yaml
+  - headers/device.yaml
+  - headers/misc.yaml
+  - headers/model.yaml
+  - headers/optimizer.yaml
+
+# for resnet12: train shot must be 15
+way_num: 5
+shot_num: 1
+query_num: 15
+test_way: 5
+test_shot: 1
+test_query: 15
+
+epoch: 100
+train_episode: 100
+test_episode: 400
+
+episode_size: 1
+
+device_ids: 0
+n_gpu: 1
+
+# optimizer:
+#   name: SGD
+#   kwargs:
+#     lr: 0.1
+#     momentum: 0.9
+#     weight_decay: 5e-4
+#     nesterov: True
+#   other: ~
+
+# lr_scheduler:
+#   name: LambdaLR
+#   kwargs:
+#     lr_lambda: "lambda e: 1.0 if e < 12 else (0.025 if e < 30 else 0.0032 if e < 45 else (0.0014 if e < 57 else (0.00052)))"
+
+optimizer:
+  name: Adam
+  kwargs:
+    lr: 0.001
+  other: ~
+
+lr_scheduler:
+  name: StepLR
+  kwargs:
+    step_size: 50
+    gamma: 0.5
+
+classifier:
+  name: DSN
+  kwargs:
+    discriminative: True
+
+backbone:
+  name: Conv64F
+  kwargs:
+    is_flatten: True
+    is_feature: False
+
+# backbone:
+#   name: resnet12
+#   kwargs: ~
+
+# backbone:
+#   name: resnet18
+#   kwargs: ~
+
+# backbone:
+#   name: WRN
+#   kwargs:
+#     depth: 28
+#     widen_factor: 10
+#     avg_pool: False
+#     is_flatten: False

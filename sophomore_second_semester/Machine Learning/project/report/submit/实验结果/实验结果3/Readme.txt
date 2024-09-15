@@ -1,0 +1,1 @@
+在libfewshot框架上验证只在eval的时候使用kendall代替cosine就能带来不错提升

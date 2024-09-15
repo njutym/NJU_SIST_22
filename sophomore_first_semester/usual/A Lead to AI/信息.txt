@@ -1,0 +1,7 @@
+分数：
+	作业40分 一次10
+	回答问题10分bonus一次1分
+	课程项目60分
+网站：http://www.Lamda.nju.edu.cn/guolz/introai.html
+老师邮箱：guolz@nju.edu.cn
+助教邮箱：yangxw@lamda.nju.edu.cn

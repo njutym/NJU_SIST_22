@@ -1,0 +1,553 @@
+\documentclass{LabReport}
+\title{操作系统实验报告PA5}
+\author{221900180 田永铭}
+\date{\today}
+\addbibresource{refs.bib}
+\Chead{操作系统实验报告PA5 221900180 田永铭}
+\Cfoot{\thepage}
+\usepackage{listings}
+\usepackage{graphicx} 
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\begin{document}
+	\maketitle
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\section{实验要求}
+在PA4基础上，增加fork系统调用实现，使得支持如下示范应用运行（仅供参考）：
+
+\begin{lstlisting}[language=python,frame=shadowbox]
+#include "myos.h"
+
+int main(void)
+{   
+	if(fork()==0)
+	{
+		while(1)
+		{
+			write("Ping!",5);
+			sleep(1);
+		}
+	}
+	else
+	{
+		while(1)
+		{
+			write("Pong!",5);
+			sleep(2);
+		}
+	}
+}
+\end{lstlisting}
+
+	
+	\section{实验环境}
+	
+	\begin{itemize}
+		\item 操作系统：wsl2
+		\item 编程语言：汇编语言 + C语言
+		\item 使用工具：makefile;qemu;objdump;dd;nasm等
+		\item 虚拟系统版本:Ubuntu-22
+	\end{itemize}
+	
+	\section{实验原理}
+	\begin{itemize}
+		\item \textbf{总体原理：} 在内核实现需要利用特权指令的功能，将其整理成接口暴露给上层的应用程序，应用程序通过调用接口，实现对内核函数的使用。
+		
+		\item \textbf{fork的原理：} \par\hspace{2em}当一个进程调用fork()系统调用时，操作系统会创建一个新的进程，这个新的进程几乎完全是父进程的副本。新进程拥有父进程的代码、数据和上下文信息。在创建新进程时，操作系统会复制父进程的内存空间、文件描述符和其他相关的资源。父进程和子进程之间的唯一区别在于它们的PID（进程标识符）不同，这是操作系统用来区分不同进程的唯一标识符。\par\hspace{2em}
+		在fork()调用之后，通常会在新的子进程中调用exec()或者其他类似的函数来执行不同的程序。这样做的一个常见用例是在Unix系统中的shell中执行命令，shell会调用fork()创建一个新进程，然后在新进程中调用exec()来加载并执行用户指定的命令。\par\hspace{2em}
+		需要注意的是，fork()调用会返回两次：在父进程中，它返回子进程的PID，而在子进程中，它返回0。这样可以让父进程和子进程根据返回值来执行不同的逻辑。\par\hspace{2em}
+		而我们的实验就是在i8086系统中实现fork()。
+		
+		\item \textbf{其它原理：}已在PA4中详细解释，此处不再赘述。
+		
+	\end{itemize}
+	
+	\section{实验结果展示}
+	\begin{itemize}
+		\label{result_video}
+		
+		\item \textbf{视频展示: } \href{https://box.nju.edu.cn/f/ae5c554c586b481ea788/}{\color{red} 221900180\_田永铭\_实验5\_视频演示.mp4}
+		\item \textbf{助教本地运行检验: } 只需要解压代码压缩文件，在wsl2环境下打开终端，只需运行``make"。如果没有配置好qemu路径，需要将qemu路径在代码对应位置填写完整。如果再运行不了，可直接直接跑elf。重复make前需要先make clear一下。注意，新要求的代码和旧要求的代码我都会上传，请区分。
+	\end{itemize}
+
+	
+	\section{最终成功的实验过程}
+	
+	{\color{red} 注意：} 此部分着重介绍最终成功的实验过程，而尝试过程、失败过程和各种debug过程见后面部分。\par
+	\hspace{0em}实验主要分为以下几个步骤(在PA4的基础上改进)：
+	
+	\begin{enumerate}
+		\item 理清流程和思路
+		\item 简化PA4的代码，防止本次实验512字节不够用
+		\item 增加fork中断
+		\item 修改sleep\_handler
+		\item 修改clock\_handler
+		\item 写入磁盘，查看运行效果
+		\item 进行一些优化
+	\end{enumerate}
+	
+	\subsection{理清流程和思路}
+	吸取上次实验的教训，我先理清本次实验的流程和思路，流程图如下图所示：
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\linewidth]{figures/flow_chart}
+	\caption{流程图}
+	\label{fig:flowchart}
+\end{figure}
+
+	一番梳理后我有了清晰的思路，接下来便是逐一实现。
+
+	\subsection{简化PA4的代码，防止本次实验512字节不够用}
+	由于本次实验所有的码量比较大，很容易就会超过512字节，所以我在动手前先简化了PA4实验kernel.asm中的代码，主要减少代码的点在于：
+	\begin{enumerate}
+		\item \textbf{封装了清屏部分的代码操作：}封装成了一个函数供调用
+		\item \textbf{简化了重置打印行号的操作：}之前用了一个冗余的计数器，现已简化
+		\item \textbf{简化统计时钟中断时长的方式：}，原本加法改为减法，从而少用了一个计数器
+		\item \textbf{更细节的简化：}封装时钟中断返回的指令，修改内存中的变量的值利用``word"方式从三条语句简化成一条语句等等
+	\end{enumerate}
+	
+	经过简化，代码量大大减少，可以开始本次实验了。
+	
+	\subsection{增加fork中断}
+	模仿上一次实验添加中断的方式，可以轻易地添加fork()中断，返回值最好设置成short方便后续访问ax参数。我采用的是0x82号中断，而在fork中断处理程序中，我们要做的就是拷贝数据、预设子进程返回值为0、返回父进程，实现代码如下：\\
+	
+	首先是api.asm中的fork实现，需要保护一下ax寄存器的数值，即返回值的保护，代码如下：
+	
+\begin{lstlisting}[language=python,frame=shadowbox]
+fork:
+	;ax是返回值,先返回父进程1
+	mov eax,1
+	push eax
+	
+	int 0x82
+	
+	pop eax
+	retd
+\end{lstlisting}
+
+	接着是kernel.asm中的fork实现，代码如下：
+	
+	\begin{lstlisting}[language=python,frame=shadowbox]
+fork_handler:
+	;从当前sp将各数据复制到+0x1000的地址上
+	mov si, sp
+	mov di, sp
+	add di, 0x1000
+	mov cx, 0x300   ; 超过512个字节即可
+
+	;复制过程
+	copy_loop:
+	mov al, [si] ; 将源数据段中的一个字节加载到 AL 寄存器
+	mov [di], al ; 将 AL 寄存器中的字节写入目标数据段
+	inc si       ; 指向源数据段的下一个字节
+	inc di       ; 指向目标数据段的下一个字节
+	loop copy_loop ; 循环，直到 CX 寄存器计数为零
+
+	;复制过程中di改变了，需要重新初始化di成栈顶
+	mov di,sp
+	add di,0x1000
+	mov [child_stack],di ;保存子进程栈指针
+
+	;修改子进程栈中fork的返回值ax,子进程返回0，short类型
+	mov word [di+6], 0 
+	
+	;fork返回,先返回父进程，在api中已经将父进程的ax保护为1
+	;而子进程ax返回0
+	iret 
+	\end{lstlisting}
+	此步需要注意，不能忘了重新初始化di，因为复制过程中修改了di的数值。由此便实现了fork\_handler函数，它会先返回父进程，待到子进程上台后，子进程fork()返回的返回值ax正是预先设定的0，从而实现不同进程的fork()返回控制。
+	
+
+	\subsection{修改sleep\_handler}
+	sleep\_handler中的内容相对来说比较容易实现，首先判断是谁调用的sleep\_handler，然后各自处理，判断应该跳转到哪里执行。
+	
+	\begin{lstlisting}[language=python,frame=shadowbox]
+sleep_handler:
+	cli     ;此处关中断防止干扰
+			;后面每一个分支都有唯一与之对应的sti关中断
+	;根据现在运行状态判断是谁调用了sleep
+	cmp word [current_state], 1
+	je father_sleep_handler
+	cmp word [current_state], 0
+	je child_sleep_handler
+	iret
+
+;父进程进入sleep的处理
+father_sleep_handler:   
+	imul bx, 50             ;20ms*50=1s
+	mov [father_counter], bx
+	mov [father_stack], sp
+
+	;判断子进程是否可调度
+	cmp word [is_child_sleeping], 1
+	je father_change_to_idle
+	jmp father_change_to_child
+
+;子进程进入sleep的处理
+child_sleep_handler:
+	imul bx, 50             ;20ms*50=1s
+	mov [child_counter], bx
+	mov [child_stack], sp
+
+	;判断父亲进程是否可调度
+	cmp word [is_father_sleeping], 1
+	je child_change_to_idle
+	jmp child_change_to_father
+	\end{lstlisting}
+	
+	具体跳转的时候，实现都比较类似，限于篇幅，在这里仅展示从父进程跳转到子进程的代码，代码如下：
+	
+\begin{lstlisting}[language=python,frame=shadowbox]
+father_change_to_child:
+	mov word [current_state], 0	;修改当前状态存储器的内容
+	mov [father_stack], sp	;更新现在的sp指针
+	mov sp, [child_stack]	;修改sp指针到要跳转的地方
+	mov word [is_father_sleeping], 1 ;修改父进程是否睡眠的状态
+	sti   ;这里的cli与sleep_handler中的cli相互对应
+	jmp int_exit	;时钟中断返回
+\end{lstlisting}
+	
+	至此，sleep\_handler已经实现。
+
+	\subsection{修改clock\_handler}
+	这一部分的修改比较繁琐，因为时钟中断可能是从父进程、子进程、idle进程三种情况来的，跳转的结果也有很多种，需要细心实现，代码如下:
+	
+	首先更新sp，通过current\_state判断更新谁的。
+\begin{lstlisting}[language=python,frame=shadowbox]
+;时钟中断处理
+clock_handler:
+	;首先更新sp，通过current_state判断更新谁的
+	mov cx, [current_state]
+	cmp cx, 0 ;子进程
+	je clock_child
+	cmp cx, 1 ;父进程
+	je clock_father
+	cmp cx,2  ;idle进程
+	je clock_idle
+	
+	;由父进程进来的时钟中断
+	clock_father:
+	mov [father_stack],sp
+	jmp handle_clock
+	
+	;由子进程进来的时钟中断
+	clock_child:
+	mov [child_stack],sp
+	jmp handle_clock
+	
+	;由idle进程进来的时钟中断
+	clock_idle:
+	mov [idle_stack],sp
+	jmp handle_clock
+\end{lstlisting}
+
+	接下来程序统一转到handle\_clock进行处理，代码如下：
+	
+	\begin{lstlisting}[language=python,frame=shadowbox]
+;再统一处理时钟中断
+handle_clock:
+	;这个函数的所有分支都会汇入judge_if_change
+
+	;首先计算以下进中断的时候是否有没在sleep的进程 
+	;如果有，cx会小于2，方便后面处理
+	mov cx, [is_father_sleeping]
+	mov dx, [is_child_sleeping]
+	add cx, dx
+	
+	;由于绝大部分时间都在sleep，为了省字节;
+	;不妨父进程和子进程计数器值都更新一下
+	dec byte [father_counter]
+	dec byte [child_counter]
+	
+	;为了考虑极端情况，判断是否苏醒不用计数器是否为0;
+	;而用计数器是否减到小于1的值
+	;防止父进程子进程同时能唤醒，父进程先回去了
+	;子进程计数器为-1而无法后续被唤醒
+	
+	;判断父进程是否能够苏醒
+	judge_father:
+		cmp word [father_counter], 1
+		jl father_awake
+	
+	;判断子进程是否能够苏醒
+	judge_child:
+		cmp word [child_counter], 1
+		jl child_awake
+		jmp judge_if_change
+	
+	;父进程苏醒
+	father_awake:
+		mov word [is_father_sleeping], 0
+		jmp judge_child ;需要继续判断子进程能否苏醒
+	
+	;子进程苏醒
+	child_awake:
+		mov word [is_child_sleeping], 0
+		jmp judge_if_change
+	
+	;判断是否从时钟中断跳转到别处
+	judge_if_change:
+		;cx小于2代表子进程或者父进程至少有一个在运行,不做跳转
+		cmp cx, 2
+		jl int_exit 
+		
+		;为了考虑极端情况，判断进程能否跳转不用计数器是否为0;
+		;而用计数器是否减到小于1的值
+		;防止父进程子进程同时能唤醒，父进程先回去了,
+		;子进程计数器为-1而无法后续被唤醒
+		
+		;优先苏醒父进程
+		cmp word [is_father_sleeping], 0
+		je clock_change_to_father ;
+		
+		;其次苏醒子进程
+		cmp word [is_child_sleeping], 0
+		je clock_change_to_child  ;
+		
+		jmp int_exit
+	
+	;时钟中断返回(含EOF)
+	int_exit:
+		mov al,20h
+		out 20h,al
+		iret
+	\end{lstlisting}
+	
+	限于篇幅，时钟中断中跳转部分的代码仅展示从时钟中断跳转到父进程的代码，跳转到子进程的代码完全类似，代码如下:
+	\begin{lstlisting}[language=python,frame=shadowbox]
+;sp的值已经在刚进入时钟中断的时候更新给对应的进程了
+clock_change_to_father:
+	mov word [current_state], 1
+	mov sp, [father_stack]
+	jmp int_exit
+	\end{lstlisting}
+	
+	至此，已经实现了clock\_handler。由于逻辑比较复杂，所以我对照整理好的流程图仔细检查了流程，要注意不能漏掉任何必需的步骤，需要做到非常仔细。
+
+	\subsection{写入磁盘，查看运行效果}
+	在wsl2中利用make命令运行makefile，进行各文件的编译，和最终虚拟机的运行。实验结果视频\ref{result_video}{\color{red} 结果展示视频}在开头已经展示，下面再展示一张图片：
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/result}
+	\caption{运行结果}
+	\label{fig:result}
+\end{figure}
+	运行结果完全符合预期，输出结果``pong + ping + 停顿1s + ping + 停顿1s"的无限循环。
+	
+	\subsection{进行一些优化}
+	\subsubsection{优化条件跳转语句}
+	这次实验的条件跳转语句非常多，再加上刚写完复杂的逻辑代码比较混乱，所以为了代码的美观，我将条件跳转语句以此修改，加上标签，尽量保持了跳转的``对称性"，例如从父进程跳转到子进程的代码应当和从子进程跳转到父进程的代码相对称。这样进一步增加了代码的可读性。
+	
+	\subsubsection{优化整个代码结构}
+	代码的结构一开始比较混乱，标签各处都是、位置混乱，所以我重新编排了代码的标签位置，按照严格的逻辑顺序编排，代码结构如下：\newline
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/structure}
+	\caption{代码结构}
+\end{figure}
+
+	更小的代码结构如下(以跳转部分代码为例):\newline\\\\\\\\\\\\\\\\\\\\\\\\
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/mini_structure}
+	\caption{mini代码结构}
+\end{figure}
+
+	\section{各种尝试、失败、debug过程}
+	这部分是体现作业是自己做的的核心，这次作业，我遇到了非常非常多的问题
+		\begin{tikzpicture}[scale=0.2]
+			% face
+			\fill[red!20] (0,0) circle (2cm);
+			
+			% eyes
+			\fill[white] (-0.6,0.5) circle (0.4cm);
+			\fill[white] (0.6,0.5) circle (0.4cm);
+			% left eye
+			\fill[black] (-0.6,0.5) circle (0.2cm);
+			% right eye
+			\fill[black] (0.6,0.5) circle (0.2cm);
+			
+			% mouth
+			\draw[line width=0.1cm] (-0.8,-1.3) .. controls (-0.4,-0.7) and (0.4,-0.7) .. (0.8,-1.3);	
+		\end{tikzpicture},我解决了绝大部分，才得以得到上一部分展示的成功，接下来我将详细展示。
+		
+	\subsection{ short or int——16位和32位代码没有注意区分!}
+	由于fork()在kernel.asm中的实现需要预先修改子进程返回的值为0，而这就需要访问这个位置的参数。一开始我的myos.h中的fork返回值不小心写成int了，这就与我kernel中的实现相不匹配。这个bug de了很久，但是修改起来简单，只需要在头文件中定义成short类型返回即可。
+	
+	\subsection{ 始终是父进程在运行！}
+	在编写kernel.asm中clock\_handler的代码的时候，我犯了一个错误，本意想判断如果是父进程或者子进程进来的时钟中断，则不能跳转，但是写成了判断父进程是否在睡眠，在睡眠就直接返回了，导致子进程无法执行到。发现这个bug后，我增加了如下代码：
+	
+	\begin{lstlisting}[language=python,frame=shadowbox]
+;首先计算以下进中断的时候是否有没在sleep的进程;
+;如果有，cx会小于2，方便后面处理
+mov cx, [is_father_sleeping]
+mov dx, [is_child_sleeping]
+add cx, dx
+
+......(省略一段代码)
+
+;在要判断跳转的时候再利用cx这个值
+;cx小于2代表子进程或者父进程至少有一个在运行,不做跳转
+cmp cx, 2
+jl int_exit
+	\end{lstlisting}
+	
+	\subsection{ fork()中复制数据后忘了再初始化栈！}
+	复制过程中di改变了，需要重新初始化di成栈顶才行，一开始我忘了。
+
+
+	\subsection{ 超字节超字节超字节！}
+	尽管已经有了预防，已经在做PA5之前将PA4的代码狠狠简化了，但是在实现PA5的过程中还是不断地超过512字节。这也给本次实验带来了很多困扰。当然解决方法和简化PA4的方法差不多，这里不再赘述。
+	
+	\subsection{ 忘了iret！}
+	优化PA4代码的时候，我将清屏的代码进行了封装，但是在中断调用清屏的时候需要iret，我却没有iret，导致bug，这也de了很久。
+	
+	\subsection{ 其他尝试：不用数据段current\_state储存状态能不能实现}
+	一开始我没有使用current\_state来实现，我预期的是直接通过访问栈对应位置的参数来知晓是谁在运行，但是可惜实现过程bug累累，不是bugA出现就是bugB出现，最终放弃，还是采用内存中数据段的方式来清晰地实现。
+
+	\subsection{ 其他问题}
+	都是一些比较明显的bug，但是由于心急以及代码本身比较复杂，犯了不少。
+	
+	\section{新增要求：利用段地址实现}
+	{\color{red} 注意：此部分以前内容都是实现的旧要求，此部分实现新增要求。}
+	以上实现不能满足最新应用程序的要求，应用程序如下：
+		\begin{lstlisting}[language=python,frame=shadowbox]
+#include "myos.h"
+
+static int t;
+
+int main(void)
+{   
+	if(fork()==0)
+	{
+		t = 1;
+		while(1)
+		{
+			write("Ping!",5);
+			sleep(t);
+		}
+	}
+	else
+	{
+		t = 2;
+		while(1)
+		{
+			write("Pong!",5);
+			sleep(t);
+		}
+	}
+}
+	\end{lstlisting}
+	
+	因此，我需要做出修改。具体来说，我的修改分为以下三个部分:
+	\subsection{ 减少字节}
+	因为我字节本来就要满了，所以必须得删一些。我把所有能改的16寄存器改成8位的寄存器，但又因此犯了一个错误：有些地方的``mov word" 没有对应改成``mov byte"。同时，我新代码不再处理打印打到屏幕底端的bug省去一个变量和相关操作。另外，我利用jmp跳转应用程序，iret方式在PA4中已经实现，这里为了省字节就退而求其次。
+	
+	\subsection{ fork实现成将数据复制到另一个段地址上}
+	修改后的fork如下：
+			\begin{lstlisting}[language=python,frame=shadowbox]
+;fork相关代码
+;fork中断处理,段地址从0x0000:0x8000到0x1000:0x8000
+fork_handler:
+	mov [child_stack],sp ;保存子进程栈指针
+	
+	;切到子进程段进行复制
+	mov word es, [child_ds]
+	
+	mov di, sp
+	mov si, sp
+	mov cx, 0x300
+	cld
+	rep movsb
+	
+	;es保存为父进程段，此后不再改变，可以被利用
+	xor ax, ax
+	mov es, ax
+	
+	;修改子进程段地址的内容
+	mov word ds, [child_ds]
+	
+	;重新更新di指向sp
+	mov di, sp
+	;修改子进程栈中fork的返回值ax,子进程返回0，short类型
+	mov [di+6], ax
+	
+	;修改回段地址为0x0000
+	mov ds, ax
+	
+	;fork返回,先返回父进程，在api中已经将父进程的ax保护为1
+	;而子进程ax返回0
+	iret
+	\end{lstlisting}
+	终究还是采用了助教的方式，注意以上代码，es最后是能够保存内核和父进程的段地址的，这方便内核write和sleep的处理。
+	
+	\subsection{ 简要修改内核代码}
+	\hspace{0em}1.write的修改较为简单，只需要利用[es:内核中定义的全局变量]的方式来获取全局变量就可以了。而clock和sleep需要根据子进程还是父进程用不同的ds(之前保存在两个变量中)。\\具体来说，子进程睡眠时将ds重置为0，代码如下：
+			\begin{lstlisting}[language=python,frame=shadowbox]
+xor ax,ax
+mov ds,ax
+mov ss,ax
+\end{lstlisting}
+	\hspace{0em}2.进时钟中断需要先把ds改成0，然后若是子进程再改为0x1000，这边函数用的比较多，全部展示比较混乱，略去不看。\\
+	\hspace{0em}3.跳转子进程的时候将ds改为子进程的，代码如下：
+			\begin{lstlisting}[language=python,frame=shadowbox]
+father_change_to_child:
+	mov byte [current_state], 0
+	mov [father_stack], sp
+	mov sp, [child_stack]
+	mov byte [is_father_sleeping], 1
+	
+	;段地址换成子进程的
+	mov ss, [child_ds]
+	mov ds, [child_ds]
+	sti   ;这里的cli与sleep_handler中的cli相互对应
+	jmp int_exit
+
+clock_change_to_child:
+	mov byte [current_state], 0
+	mov sp, [child_stack]
+	
+	;段地址换成子进程的
+	mov ss, [child_ds]
+	mov ds, [child_ds]
+	jmp int_exit
+\end{lstlisting}
+	经过如上修改，已经能够实现应用程序。接下来是新增内容的总结部分：
+	\subsection{ 新增部分总结}
+	实现这部分代码的时候我也犯了一些错误：\\
+	1.因为要省字节，我把能省的寄存器都从16位改成8位了，但是有几处忘了把mov word修改成mov byte；\\
+	2.fork里面ds改成子进程后最后忘了改回来；\\
+	3.进clock我过早把ds改成子进程了，后面还用了内核里的全局变量也没加es就用错了。\\
+	通过解决这些问题，我理解了助教所说的利用段地址的实现方式。\par
+	\hspace{0em}段地址：在分段内存管理中，内存被分成不同的段，每个段有自己的基地址和长度。每个段可以用来存储不同类型的数据，如代码段、数据段和堆栈段。\par
+	\hspace{0em}fork()：当一个进程调用 fork() 时，操作系统创建一个新进程（子进程），并复制父进程的地址空间，使子进程成为父进程的副本。\par
+	\hspace{0em}很佩服早期实现操作的人们，他们就是不断地找到问题、不断地修改和进步，才实现了操作系统。被新要求这么一折腾，我也体会了其中的痛楚与伟大。\par
+	\hspace{0em}另外，此部分的实现与同学交流后实现，在此致谢。
+	
+	
+	
+	\section{总结与反思}
+	\begin{itemize}
+		\item 理论好理解不代表实验好做，实验需要非常多的细节，有了上次的经验，我学会了先理清流程，先画出流程图，思路明确了再实现，这才得以比较顺利地实现
+		\item STFW,RTFM 是计算机大类学生必备的素养，知识需要主动检索和学习
+		\item 通过本次实验，我亲手实现了fork()，对fork()调用有了更深的理解。在调试各种bug的过程中，我更加坚信，这两句话永远是对的：1.机器永远是对的 2.未经检验的代码永远是错的 ——蒋炎岩
+	\end{itemize}
+
+	\section{其它参考文献}
+	除了正文给出的参考文献，我参考的文献还有:\\\\
+	\href{https://blog.csdn.net/qq_42230338/article/details/96485400}{fork（）函数的底层实现原理}\\
+	\href{https://www.cnblogs.com/HsinTsao/p/6512715.html}{jmp系列跳转指令总结}\\
+	\href{https://blog.csdn.net/darker0019527/article/details/103374186}{fork原理--Linux的底层实现}\\
+	\href{https://zhuanlan.zhihu.com/p/656259964}{嵌入式软件之链接脚本 .ld}\\
+	\href{https://blog.csdn.net/qq_53004789/article/details/131354767}{makefile介绍}\\
+	
+\end{document}

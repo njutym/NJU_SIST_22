@@ -1,0 +1,29 @@
+\contentsline {section}{\numberline {一、}实验要求}{3}{section.1}%
+\contentsline {section}{\numberline {二、}实验环境}{3}{section.2}%
+\contentsline {section}{\numberline {三、}实验原理}{4}{section.3}%
+\contentsline {section}{\numberline {四、}实验结果展示}{4}{section.4}%
+\contentsline {section}{\numberline {五、}最终成功的实验过程}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}理清流程和思路}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}简化PA4的代码，防止本次实验512字节不够用}{6}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}增加fork中断}{6}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}修改sleep\_handler}{7}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}修改clock\_handler}{9}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}写入磁盘，查看运行效果}{12}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}进行一些优化}{12}{subsection.5.7}%
+\contentsline {subsubsection}{\numberline {5.7.1}优化条件跳转语句}{12}{subsubsection.5.7.1}%
+\contentsline {subsubsection}{\numberline {5.7.2}优化整个代码结构}{13}{subsubsection.5.7.2}%
+\contentsline {section}{\numberline {六、}各种尝试、失败、debug过程}{14}{section.6}%
+\contentsline {subsection}{\numberline {6.1} short or int——16位和32位代码没有注意区分!}{14}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2} 始终是父进程在运行！}{14}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3} fork()中复制数据后忘了再初始化栈！}{15}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4} 超字节超字节超字节！}{15}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5} 忘了iret！}{15}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6} 其他尝试：不用数据段current\_state储存状态能不能实现}{15}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7} 其他问题}{15}{subsection.6.7}%
+\contentsline {section}{\numberline {七、}新增要求：利用段地址实现}{16}{section.7}%
+\contentsline {subsection}{\numberline {7.1} 减少字节}{16}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2} fork实现成将数据复制到另一个段地址上}{17}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3} 简要修改内核代码}{18}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4} 新增部分总结}{19}{subsection.7.4}%
+\contentsline {section}{\numberline {八、}总结与反思}{19}{section.8}%
+\contentsline {section}{\numberline {九、}其它参考文献}{19}{section.9}%

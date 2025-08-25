@@ -1,0 +1,112 @@
+% 作业模板
+\documentclass[UTF8,10pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{graphicx}
+% \catcode`\。=\active
+% \newcommand{。}{．}
+\newcommand{\CourseName}{数据库}
+\newcommand{\Semester}{2023-2024学年第二学期}
+\newcommand{\ProjectName}{作业 2}
+\newcommand{\DueTimeType}{完成日期}
+\newcommand{\DueTime}{\today}
+\newcommand{\StudentName}{田永铭}
+\newcommand{\StudentID}{221900180}
+\usepackage[vmargin=1in,hmargin=.5in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{calc}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\CourseName}
+\fancyhead[C]{\ProjectName}
+\fancyhead[R]{\StudentName}
+\fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\setlength\headheight{12pt}
+\fancypagestyle{FirstPageStyle}{
+	\fancyhf{}
+	\fancyhead[L]{\CourseName\\
+		\Semester}
+	\fancyhead[C]{{\Huge\bfseries\ProjectName}\\
+		\DueTimeType\ : \DueTime}
+	\fancyhead[R]{姓名 : \makebox[\widthof{\StudentID}][s]{\StudentName}\\
+		学号 : \StudentID\\
+		成绩 :\makebox[\widthof{\StudentID}]{}}
+	\fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+	\setlength\headheight{36pt}
+}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\allowdisplaybreaks[4]
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{.}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+\newtheorem{prob}{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+% \usepackage{graphicx}
+\begin{document}
+	\thispagestyle{FirstPageStyle}
+	
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+	$E-\Pi_{person\_name,street,city}(E \bowtie M)$
+	\end{sol}
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+		令$A = E \bowtie M$ (即A表示有上级经理的员工的四则信息)，则答案为:\\$\Pi_{A.person\_name}(\sigma_{A.street=E.street\land A.city=E.city}(A\underset{A.manager\_name=E.person\_name}{\bowtie} E))$
+	\end{sol}
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+		$\Pi_{person\_name}(\sigma_{company\_name \neq `First \hspace{0.5em}Bank\hspace{0.5em}Corp’}(W))$
+	\end{sol}
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+	记S = W,则答案为\\$\Pi_{person\_name}(W) - \Pi_{person\_name}(W \underset{W.salary <= S.salary \land S.company\_name=`Small\hspace{0.5em}Bank\hspace{0.5em}Corp’}{\bowtie} S)$
+	\end{sol}
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+	记S = W,则答案为\\$\Pi_{manager\_name}(\sigma_{M.person\_name\neq S.person\_name \land M.manager\_name = S.manager\_name}(M \times S))$
+	\end{sol}
+	
+	\begin{prob}
+	\end{prob}
+	
+	\begin{sol} 
+	(注意:南京以``Nanjing''代替)\\
+	$\Pi_{person\_name}(\sigma_{city=`Nanjing’(W \bowtie C)})$
+	\end{sol}
+
+
+\end{document}

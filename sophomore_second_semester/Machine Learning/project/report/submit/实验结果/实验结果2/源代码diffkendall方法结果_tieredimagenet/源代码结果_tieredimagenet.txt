@@ -1,0 +1,59 @@
+
+
+python meta.py -beta 1 -bs 4 -lr 0.00001
+{'backbone_name': 'resnet12',
+ 'beta': 1,
+ 'bs': 4,
+ 'data_dir': '/mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine '
+             'Learning/project/dataset/tiered_imagenet',
+ 'dataset': 'tieredimagenet',
+ 'gamma': 0.5,
+ 'gpu': '0',
+ 'lr': 1e-05,
+ 'max_epoch': 50,
+ 'pretrain_dir': '/mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine '
+                 'Learning/project/DiffKendall-master/checkpoint/save3/diffkendall/tieredimagenet/1shot-5way/max_acc.pth',
+ 'query': 15,
+ 'random_val_task': False,
+ 'save_all': False,
+ 'set': 'test',
+ 'shot': 1,
+ 'step_size': 10,
+ 'val_episode': 200,
+ 'val_frequency': 50,
+ 'way': 5}
+use gpu: [0]
+create folder: checkpoint/diffkendall/tieredimagenet/1shot-5way/
+loading model from : /mnt/d/@extremely_important_files/class_and_homework/sophomore_second_semester/Machine Learning/project/DiffKendall-master/checkpoint/save3/diffkendall/tieredimagenet/1shot-5way/max_acc.pth
+fix val set for all epochs
+save all checkpoint models: False
+checkpoint/diffkendall/tieredimagenet/1shot-5way/
+  0%|                                                                                                                          | 0/200 [00:00<?, ?it/s]/home/tianyongming/anaconda3/envs/libfewshot/lib/python3.10/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at /opt/conda/conda-bld/pytorch_1712608839953/work/aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+epo 1, total loss=0.0839 acc=0.8533: 100%|███████████████████████████████████████████████████████████████████████████| 200/200 [03:25<00:00,  1.03s/it]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 200/200 [00:38<00:00,  5.25it/s]
+val acc:0.6803
+*********A better model is found*********
+best epoch 1, best val acc=0.6803
+This epoch takes 243 seconds 
+still need 3.31 hour to finish
+checkpoint/diffkendall/tieredimagenet/1shot-5way/
+epo 2, total loss=0.2030 acc=0.6800: 100%|███████████████████████████████████████████████████████████████████████████| 200/200 [03:25<00:00,  1.03s/it]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 200/200 [00:38<00:00,  5.19it/s]
+val acc:0.6815
+*********A better model is found*********
+best epoch 2, best val acc=0.6815
+This epoch takes 244 seconds 
+still need 3.26 hour to finish
+checkpoint/diffkendall/tieredimagenet/1shot-5way/
+epo 3, total loss=0.2399 acc=0.6400: 100%|███████████████████████████████████████████████████████████████████████████| 200/200 [03:29<00:00,  1.05s/it]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 200/200 [00:38<00:00,  5.20it/s]
+val acc:0.6779
+best epoch 2, best val acc=0.6815
+This epoch takes 248 seconds 
+still need 3.24 hour to finish
+checkpoint/diffkendall/tieredimagenet/1shot-5way/
+epo 4, total loss=0.0479 acc=0.9600: 100%|███████████████████████████████████████████████████████████████████████████| 200/200 [03:25<00:00,  1.03s/it]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 200/200 [00:38<00:00,  5.21it/s]
+val acc:0.6838
+*********A better model is found*********

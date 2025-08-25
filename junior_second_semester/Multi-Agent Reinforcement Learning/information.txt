@@ -1,0 +1,15 @@
+课程网站  https://reinforcement-learning-2025.github.io/
+
+教材：https://rl.qiwihui.com/zh-cn/latest/
+
+
+考勤10 
+作业20 10次
+实践20 2题，每组3人
+课程项目 4选1，每组5-6人。
+
+均要看代码+报告+模型。
+
+提交平台 DODO
+
+可咨询往届学长课程相关事项。Vous pouvez consulter les anciens étudiants pour connaître leur avis sur ce cours. En tant que cours commun aux étudiants de licence et de master, aucun étudiant en master n’a donné le moindre avis négatif à son sujet.

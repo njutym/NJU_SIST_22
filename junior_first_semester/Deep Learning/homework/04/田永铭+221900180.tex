@@ -1,0 +1,654 @@
+\documentclass{article}
+
+
+% 中文支持
+\usepackage[UTF8,heading = true]{ctex}
+
+
+% 页面布局
+\usepackage[a4paper]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\Lhead}[1]{\fancyhead[L]{#1}}
+\newcommand{\Chead}[1]{\fancyhead[C]{#1}}
+\newcommand{\Rhead}[1]{\fancyhead[R]{#1}}
+\newcommand{\Lfoot}[1]{\fancyfoot[L]{#1}}
+\newcommand{\Cfoot}[1]{\fancyfoot[C]{#1}}
+\newcommand{\Rfoot}[1]{\fancyfoot[R]{#1}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage{lastpage}
+%待填信息
+% -----------------------------------------------------
+\newcommand{\Course}{深度学习平台与应用}             		%      |
+\newcommand{\Assignment}{深度学习作业 4}		  %      | 
+\newcommand{\Name}{田永铭}				    	 %      |
+\newcommand{\ID}{221900180}				  	   %       |
+\newcommand{\Email}{tianym2022@smail.nju.edu.cn}  %    |
+% ------------------------------------------------------
+\fancyhead[L]{\Course}
+\fancyhead[C]{\Assignment}
+\fancyhead[R]{\ID \Name}
+\fancyfoot[C]{\thepage\ / \pageref*{LastPage}}	
+\setlength\headheight{36pt}
+% 自定义页面样式第一页只有页脚没有页眉
+\makeatletter
+\def\ps@onlyfoot{
+	\let\@oddhead\@empty
+	\let\@evenhead\@empty
+	\def\@oddfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+	\def\@evenfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+}
+\makeatother
+% maketitle
+\title{\Huge\Assignment}
+\author{\ID \Name \quad\href{mailto:tianym2022@smail.nju.edu.cn}{\color{magenta}\Email}}
+\date{\today}
+
+
+% 字体和颜色
+\usepackage{fontspec} 
+\fontsize{12pt}{\baselineskip}\selectfont
+\usepackage{xcolor}
+
+
+% 数学支持
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{esint}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% 左边大括号
+%\[
+%\left\{
+%\begin{aligned}
+%	& \text{approximate  covariance matrix of GP} \\
+%	& \text{only use subset}\\
+%	& \text{conditional independence assumption}
+%\end{aligned}
+%\right.
+%\]
+
+% 矩阵
+%\[
+%\begin{matrix}
+%	a & b \\
+%	c & d
+%\end{matrix}
+%\]
+
+% 行列式
+%\[
+%\begin{vmatrix}
+%	a & b \\
+%	c & d
+%\end{vmatrix}
+%\]
+
+
+% 标题格式
+\usepackage{titlesec}
+% 自定义 section 标题格式
+\renewcommand{\thesection}{\chinese{section}、}
+\titleformat{\section}
+{\normalfont\Large\bfseries\centering\color[rgb]{0,0,0.8}} % 设定字体和大小
+{\thesection}{0em} % 设定编号和标题之间的距离
+{}
+% 自定义 subsection 标题格式
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection} }
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color[rgb]{0.23,0.65,0.99}}
+{\thesubsection}{0em}
+{}
+% 自定义 subsubsection 标题格式
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection} }
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}
+{\thesubsubsection}{0em}
+{}
+% 设置 section 标题的间距
+\titlespacing*{\section}
+{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+% 设置 subsection 标题的间距
+\titlespacing*{\subsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% 设置 subsubsection 标题的间距
+\titlespacing*{\subsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+% 代码 
+% 如非默认，需使用[language=xxx,style=mystyle]
+\usepackage{listings}
+% language:  {[x86masm]Assembler}(汇编); python; C; C++; Java; SQL; Matlab; R; bash; make(makefile)
+\lstdefinestyle{mystyle}{
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny\color{magenta},
+	stepnumber=1,
+	numbersep=10pt,
+	backgroundcolor=\color[rgb]{0.95,0.95,0.95},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	rulecolor=\color{black},
+	tabsize=2,
+	captionpos=b,
+	breaklines=true,
+	breakatwhitespace=false,
+	title=\lstname,
+	keywordstyle=\color{blue},
+	commentstyle=\color[rgb]{0.0,0.5,0.0},
+	stringstyle=\color[rgb]{0.23,0.65,0.99}\itshape,
+	escapeinside={\%*}{*)},
+	morekeywords={}, % 添加更多关键字
+	literate=
+	{[}{{{\color{red}[}}}1
+	{]}{{{\color{red}]}}}1
+	{\{}{{{\color[rgb]{0.9,0,0.9}\{}}}1
+	{\}}{{{\color[rgb]{0.9,0,0.9}\}}}}1
+%	{0}{{{\color[rgb]{0.2,0.9,0.4}0}}}1
+%	{1}{{{\color[rgb]{0.2,0.9,0.4}1}}}1
+%	{2}{{{\color[rgb]{0.2,0.9,0.4}2}}}1
+%	{3}{{{\color[rgb]{0.2,0.9,0.4}3}}}1
+%	{4}{{{\color[rgb]{0.2,0.9,0.4}4}}}1
+%	{5}{{{\color[rgb]{0.2,0.9,0.4}5}}}1
+%	{6}{{{\color[rgb]{0.2,0.9,0.4}6}}}1
+%	{7}{{{\color[rgb]{0.2,0.9,0.4}7}}}1
+%	{8}{{{\color[rgb]{0.2,0.9,0.4}8}}}1
+%	{9}{{{\color[rgb]{0.2,0.9,0.4}9}}}1
+}
+\lstset{style=mystyle}
+
+
+% 图表
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font={small}}
+\usepackage{diagbox}
+\usepackage{array}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% 表1
+%\begin{table}[h!]
+%	\centering
+%	\caption{Performance comparison on mini-ImageNet and tiered-ImageNet datasets.}
+%	\begin{tabular}{@{}lcccccccc@{}}
+%		\toprule
+%		Dataset & Method & Backbone & 5-way 1-shot \\
+%		\midrule
+%		\multirow{9}{*}{\rotatebox[origin=c]{90}{mini-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.291 \\
+%		& MAML & Conv-4 & 49.704 \\
+%		& BOIL & Conv-4 & 48.456 \\
+%		& CAN & ResNet-12 & 59.493\\
+%		& LEO & ResNet-12 & 55.056 \\
+%		& SKD & ResNet-12 & 66.700  \\
+%		& R2D2 & ResNet-12 & 59.802 \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{68.727} \\
+%		\midrule
+%		\multirow{6}{*}{\rotatebox[origin=c]{90}{tiered-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.653 \\
+%		& Relation Networks & Conv-4 & 55.107  \\
+%		& MAML & Conv-4 & 51.038 \\
+%		& R2D2 & ResNet-12 & 64.916  \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{66.598} \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+% 表2
+%\begin{table}[t]
+%	\caption{Classification accuracies for naive Bayes and flexible
+%		Bayes on various data sets.}
+%	\label{sample-table}
+%	\vskip 0.15in
+%	\begin{center}
+%		\begin{small}
+%			\begin{sc}
+%				\begin{tabular}{lcccr}
+%					\toprule
+%					Data set & Naive & Flexible & Better? \\
+%					\midrule
+%					Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
+%					Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
+%					Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
+%					Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
+%					Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
+%					Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
+%					Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
+%					Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
+%					\bottomrule
+%				\end{tabular}
+%			\end{sc}
+%		\end{small}
+%	\end{center}
+%	\vskip -0.1in
+%\end{table}
+
+
+% 算法
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\begin{algorithm}[tb]
+%	\caption{Bubble Sort}
+%	\label{alg:example}
+%	\begin{algorithmic}
+	%		\STATE {\bfseries Input:} data $x_i$, size $m$
+	%		\REPEAT
+	%		\STATE Initialize $noChange = true$.
+	%		\FOR{$i=1$ {\bfseries to} $m-1$}
+	%		\IF{$x_i > x_{i+1}$}
+	%		\STATE Swap $x_i$ and $x_{i+1}$
+	%		\STATE $noChange = false$
+	%		\ENDIF
+	%		\ENDFOR
+	%		\UNTIL{$noChange$ is $true$}
+	%	\end{algorithmic}
+%\end{algorithm}
+
+% 超链接
+\usepackage{hyperref}
+
+
+% 论文参考文献
+% 需在正文结尾加入 \bibliography{references}，在同目录下创建references.bib
+\bibliographystyle{plain}
+
+
+% 表情
+% https://ctan.math.washington.edu/tex-archive/graphics/pgf/contrib/tikzsymbols/tikzsymbols.pdf
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+% 背景颜色：\colorbox{yellow}{...}
+% 3D版本： 在前面加上d,比如：dSmiley
+
+% 常用
+% 笑脸：\Smiley[⟨scale⟩][⟨color⟩]
+% 哭脸：\Sadey[⟨scale⟩][⟨color⟩]
+% 生气脸： \Annoey[⟨scale⟩][⟨color⟩]
+% 大笑： \Laughey[⟨scale⟩][⟨color⟩][⟨mouth color⟩]
+% 挤眉弄眼： \Winkey[⟨scale⟩][⟨color⟩]
+% 去世： \Xey[⟨scale⟩][⟨color⟩]
+% 升天： \wInnocey[⟨scale⟩]
+% 口吐芬芳： \Vomey[⟨scale⟩][⟨color⟩][⟨vomit color⟩]
+% 猫： \Cat[⟨scale⟩]
+% 炸弹： \Ninja[⟨scale⟩][⟨color⟩][⟨headband color⟩][⟨eye color⟩]
+% 困： \Sleepey[⟨scale⟩][⟨color⟩][⟨cap color⟩][⟨star color⟩]
+% 口罩：\Maskey[⟨scale⟩][⟨color⟩][⟨mask color⟩]
+% 渐变弧度脸(-2到2)： \Changey[⟨scale⟩][⟨color⟩]{⟨mood⟩}
+% 树（春夏秋冬）： \Springtree[⟨scale⟩]
+% 咖啡： \Coffeecup[⟨scale⟩]
+
+
+
+% 简化命令
+\newcommand{\hs}[1]{\hspace{{#1}em}} %空格
+\newcommand{\qd}{\quad} %空格
+\newcommand{\qqd}{\qquad} %空格
+% 链接
+\newcommand{\myhref}[2]{\href{#1}{{\color[rgb]{0.9,0,0.9}{#2}}}}
+\newcommand{\myred}[1]{{\color{red}{#1}}} %红色
+% 图 args：figures下图片路径，大小，图片显示名
+\newcommand{\myfig}[3]{
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#2\linewidth]{figures/#1}
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+% 左右分栏插入图片
+% args: 左图文件名，左图宽度，左图标题，右图文件名，右图宽度，右图标题
+\newcommand{\mytwocolumnfig}[6]{
+	\begin{figure}[h!]
+		\centering
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#2\linewidth]{figures/#1}
+			\caption{#3}
+			\label{fig:#1}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#5\linewidth]{figures/#4}
+			\caption{#6}
+			\label{fig:#4}
+		\end{minipage}
+	\end{figure}
+}
+
+
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+
+\newtheorem{prob}{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+
+
+\begin{document}
+	\maketitle
+	\begin{prob}
+		\textbf{损失函数计算}\\
+		已知一个线性分类器的预测得分为以下矩阵：
+		$
+		S = \begin{bmatrix}
+			4.8&2.5&2.0\\
+			-3.1&0&12.9\\
+		\end{bmatrix}
+		$
+		
+		(a) 其中每一行表示一个样本的预测得分，每一列表示一个类别。假设正确类别的索引为[0,2],请计算SVM的损失函数值，公式如下：
+		$
+		L = \frac{1}{N} \sum_{i=1}^{N} \sum_{j \neq y_i} \max(0, s_j - s_{y_i} + 1)
+		$
+		
+		
+		(b) 对于这个线性分类器的预测，计算出softmax概率以及交叉熵损失。
+	\end{prob}
+	
+	\begin{sol}
+		解：\\
+	(a)  \begin{align*}
+		L &= \frac{1}{2}\sum_{i=1}^{2}\sum_{j\neq y_i}max(0,s_j-s_{y_i}+1)\\
+		&= \frac{max(0,2.5-4.8+1)+max(0,2.0-4.8+1)}{2} + \frac{max(0,-3.1-12.9+1)+max(0,0-12.9+1)}{2}\\
+		&= 0\ .
+	\end{align*}
+	所以SVM损失函数值为0.\\
+	(b) \begin{itemize}
+		\item \textbf{计算softmax概率：}\\
+		根据公式:
+		\[P(y=k|x_i) = \frac{e^{s_k}}{\sum_{j=0}^2 e^{s_j}},\]得:(\myred{注意我这里都保留了两位小数})
+		
+		S\_{softmax} = $\begin{bmatrix}
+		0.86	& 0.09&0.05 \\
+		0.00	&0.00 &1.00
+		\end{bmatrix}$
+		\item \textbf{计算交叉熵损失：}\\
+		根据单样本的交叉熵损失公式$L_i = -log\frac{e^{y_i}}{\sum_j e^{s_j}}$，得：(\myred{注意我这里都保留了两位小数})
+		$L_{\text{entropy}} = -\frac{\log\frac{0.86}{0.86+0.09+0.05}+\log\frac{1.00}{1.00+0.00+0.00}}{2} \approx 0.07\ .$
+	\end{itemize}
+	\end{sol}
+	
+	
+	\begin{prob}
+		\textbf{numpy 实现带L2正则化的逻辑回归}\\
+		\begin{lstlisting}[language=python,style=mystyle]
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# 生成高斯分布的二分类数据
+	def generate_data(n_samples=100,  mean1=(2, 2), mean2=(-2, -2), cov=((1, 0), (0, 1))):
+	np.random.seed(42) 
+	X1 = np.random.multivariate_normal(mean1, cov, n_samples)  # 正类
+	X2 = np.random.multivariate_normal(mean2, cov, n_samples)  # 负类
+	Y1 = np.ones((n_samples, 1))  
+	Y2 = np.zeros((n_samples, 1))  
+	X = np.vstack((X1, X2))  
+	Y = np.vstack((Y1, Y2))  
+	indices = np.arange(X.shape[0])
+	np.random.shuffle(indices) 
+	return X[indices], Y[indices]
+
+
+# Sigmoid 函数
+def sigmoid(z):
+	return 1 / (1 + np.exp(-z))
+
+
+# 逻辑回归（带 L2 正则化）
+def logistic_regression(X, Y, lr=0.01, epochs=1000, lambda_=0.1):
+	m, n = X.shape  # 样本数量和特征数量
+	W = np.zeros((n, 1))  # 初始化权重
+	b = 0  # 初始偏置
+	losses = []
+
+	for epoch in range(epochs):
+		# 前向传播
+		Z = np.dot(X, W) + b  # 线性部分
+		A = sigmoid(Z)  # Sigmoid 激活
+		#todo 损失函数（交叉熵 + L2 正则化项）
+		#loss = ?
+		losses.append(loss)
+		
+		#todo 反向传播
+		#dW = ?  交叉熵 + L2 正则化 梯度
+		#db = ? 偏置的梯度
+		
+		# 参数更新
+		W -= lr * dW
+		b -= lr * db
+	
+	return W, b, losses
+
+
+# 预测函数
+def predict(X, W, b):
+	Z = np.dot(X, W) + b
+	A = sigmoid(Z)  # 激活函数
+	return (A >= 0.5).astype(int)
+
+
+# 绘制数据分布和决策边界
+def plot_decision_boundary(X, Y, W, b):
+	plt.figure(figsize=(8, 6))
+	plt.scatter(X[Y.flatten() == 0][:, 0], X[Y.flatten() == 0][:, 1], color='red', label='Class 0')
+	plt.scatter(X[Y.flatten() == 1][:, 0], X[Y.flatten() == 1][:, 1], color='blue', label='Class 1')
+	x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+	y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+	xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
+	grid = np.c_[xx.ravel(), yy.ravel()]
+	Z = predict(grid, W, b)
+	Z = Z.reshape(xx.shape)
+	plt.contourf(xx, yy, Z, alpha=0.3, cmap="coolwarm")
+	plt.legend()
+	plt.title("Decision Boundary")
+	plt.show()
+
+
+# 主程序
+if __name__ == "__main__":
+	X, Y = generate_data(n_samples=100)
+	X = (X - np.mean(X, axis=0)) / np.std(X, axis=0)  # 特征标准化
+	W, b, losses = logistic_regression(X, Y, lr=0.1, epochs=1000, lambda_=0.5)
+	print(f"最终损失: {losses[-1]}")
+	plt.plot(losses)
+	plt.title("Loss Curve")
+	plt.xlabel("Epochs")
+	plt.ylabel("Loss")
+	plt.show()
+	# 绘制决策边界
+	plot_decision_boundary(X, Y, W, b)
+		\end{lstlisting}
+	\end{prob}
+	
+	\begin{sol}
+解：\\
+补充部分的代码如下：
+\begin{lstlisting}[language=python,style=mystyle]
+loss = -(1 / m) * np.sum(Y * np.log(A) + (1 - Y) * np.log(1 - A))
+loss += (lambda_ / (2m)) * np.sum(W ** 2) ## 除以2是方便梯度计算, 注意我这里已经除以2了，后面梯度就不用除以2了,根据老师所讲这里需要除以m
+
+......
+
+dZ = A - Y  # 损失对预测的梯度
+dW = (1 / m) * np.dot(X.T, dZ) + lambda_ * W /m  # 权重参数
+db = (1 / m) * np.sum(dZ)  # 偏置
+\end{lstlisting}
+
+关键步骤如下：
+
+在逻辑回归中，我们通过最小化损失函数来优化模型参数。损失函数由两部分组成：交叉熵损失和 L2 正则化项。目标是计算损失函数关于模型参数（权重 \(W\) 和偏置 \(b\)）的梯度。
+
+\textbf{损失函数} \\
+逻辑回归的损失函数由交叉熵损失和 L2 正则化项组成：
+\[
+\mathcal{L}(W, b) = -\frac{1}{m} \sum_{i=1}^{m} \left[ Y^{(i)} \log(A^{(i)}) + (1 - Y^{(i)}) \log(1 - A^{(i)}) \right] + \frac{\lambda}{2m} \sum_{i=1}^{n} W_i^2
+\]
+
+
+为了通过梯度下降方法优化模型，我们需要计算损失函数对于模型参数 \(W\) 和 \(b\) 的梯度。
+
+\textbf{(a) 对权重 \(W\) 的梯度} \\
+首先，我们需要对损失函数关于权重 \(W\) 求梯度。通过链式法则，我们可以得到：
+
+\[
+\frac{\partial \mathcal{L}}{\partial W} = \frac{\partial \mathcal{L}}{\partial Z} \cdot \frac{\partial Z}{\partial W}
+\]
+其中，\(\frac{\partial \mathcal{L}}{\partial Z} = A - Y\) 是交叉熵损失对于 \(Z\) 的梯度，这一步也是由链式法则直接计算得到的，且：
+\[
+\frac{\partial Z}{\partial W} = X^T
+\]
+因此，损失函数对于 \(W\) 的梯度为：
+\[
+\frac{\partial \mathcal{L}}{\partial W} = \frac{1}{m} \sum_{i=1}^{m} (A^{(i)} - Y^{(i)}) X^{(i)} + \lambda W/m
+\]
+其中，\( (A^{(i)} - Y^{(i)}) \) 是交叉熵损失对预测值 \(A^{(i)}\) 的梯度，\(\lambda W\) 是 L2 正则化项对 \(W\) 的梯度。
+\textbf{(b) 对偏置 \(b\) 的梯度} \\
+损失函数对于偏置 \(b\) 的梯度可以通过类似的方法计算：
+
+\[
+\frac{\partial \mathcal{L}}{\partial b} = \frac{\partial \mathcal{L}}{\partial Z} \cdot \frac{\partial Z}{\partial b}
+\]
+其中，\(\frac{\partial Z}{\partial b} = 1\)，所以损失函数对 \(b\) 的梯度为：
+\[
+\frac{\partial \mathcal{L}}{\partial b} = \frac{1}{m} \sum_{i=1}^{m} (A^{(i)} - Y^{(i)})
+\]
+
+
+
+在Colab平台运行，最终结果损失为：0.04380993306764013。
+结果见图~\ref{fig:1}。
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Figures/1}
+	\caption{训练结果图}
+	\label{fig:1}
+\end{figure}
+
+	\end{sol}
+	
+	\newpage
+	
+	\begin{prob}
+		\textbf{L1 正则化和 L2 正则化的主要区别是什么？它们分别适用于什么场景？}
+	\end{prob}
+	
+	\begin{sol}
+		$$
+		\begin{array}{|c|c|}
+			\hline
+			\textbf{特征} & \textbf{L1 正则化} \\
+			\hline
+			\textbf{公式} & \lambda \sum_{i=1}^{n} |w_i| \\
+			\hline
+			\textbf{惩罚方式} & \textbf{权重的绝对值（L1 范数）} \\
+			\hline
+			\textbf{对权重的影响} & \textbf{产生稀疏解（部分权重趋近于零）} \\
+			\hline
+			\textbf{模型稀疏性} & \textbf{更倾向于产生稀疏模型（有些权重为零）} \\
+			\hline
+			\textbf{优化算法} & \textbf{产生不连续的梯度，可能导致优化不稳定} \\
+			\hline
+		\end{array}
+		$$
+		\hspace{1cm} % 添加水平间距
+		$$
+		\begin{array}{|c|c|}
+			\hline
+			\textbf{特征} & \textbf{L2 正则化} \\
+			\hline
+			\textbf{公式} & \lambda \sum_{i=1}^{n} w_i^2 \\
+			\hline
+			\textbf{惩罚方式} & \textbf{权重的平方（L2 范数）} \\
+			\hline
+			\textbf{对权重的影响} & \textbf{使权重较小，但不完全为零} \\
+			\hline
+			\textbf{模型稀疏性} & \textbf{不倾向于产生稀疏模型，所有权重较小} \\
+			\hline
+			\textbf{优化算法} & \textbf{产生平滑的梯度，优化更稳定} \\
+			\hline
+		\end{array}
+		$$
+		
+	L1正则化适用于高维数据，用于特征的选择，或者需要稀疏模型时；L2正则化适用于特征之间存在多重共线性时，避免过拟合，需要模型稳定训练时。
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Figures/2}
+	\caption{L1为什么稀疏}
+	\label{fig:2}
+\end{figure}
+	对于L1稀疏的理解可以用一张图来展示，如图~\ref{fig:2}。
+	来源：\href{https://freemind.pluskid.org/machine-learning/sparsity-and-some-basics-of-l1-regularization/}{Sparsity and Some Basics of L1 Regularization}.
+	\end{sol}
+	
+	\newpage
+	
+	\begin{prob}
+		\textbf{AdaGrad 和 RMSProp 的主要区别是什么？ Adam优化器结合了哪些优化算法的优点？它的主要超参数有哪些？}
+	\end{prob}
+	
+	\begin{sol}
+		解：\\
+		\begin{enumerate}
+			\item \textbf{主要区别：}\\AdaGrad 使用累计梯度的平方和用来控制学习率大小，这会导致学习率一直减小，一般凸优化问题中表现较好效果，而RMSProp使用指数加权移动平均(EMA) 计算梯度的历史平方和，使得梯度平方的历史信息逐渐淡化，使算法更适合处理非平稳目标,往往更适合深度学习（以及大多数非凸问题）,两者主要区别在代码中就体现为一行，见图~\ref{fig:3}
+			\item \textbf{结合哪些算法的优点：}\\Adam优化器结合了RMSProp的自适应学习率,避免某些参数的梯度过大或过小，从而更稳定地更新参数的优点和Momentum的动量加速,避免梯度波动过大，有助于更快地找到最优解的优点
+			\item \textbf{Adam的主要超参数：}\\有$\eta $学习率 $\beta_1$一阶动量衰减系数$\beta_2$二阶动量衰减系数, 避免除$0$的小量$\epsilon=1e-7$.
+		\end{enumerate}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\linewidth]{Figures/3}
+	\caption{AdaGrad 和 RMSProp 的主要区别}
+	\label{fig:3}
+\end{figure}
+	\end{sol}
+	
+	\newpage
+	
+	\begin{prob}
+		鞍点和局部最优值的区别是什么？如何通过 Hessian 矩阵的特征值来区分它们？
+	\end{prob}
+	
+	\begin{sol}
+	解：\\
+\begin{enumerate}
+	\item \textbf{区别：}\\
+	局部最优值是指在某点$x^*$附近存在一个小的邻域，在该区域内的所有点的函数值$f(x)$均不小于(或不大于) $f(x^*)$，则$f(x^*)$称为局部最优值。这些点梯度为0.
+	
+	鞍点是指函数在某点$x_{saddle}$的梯度为零或者很小，但该点既不是局部极大值也不是局部极小值。换句话说，函数值在该点沿某些方向是极小值，而沿某些方向是极大值。这样的点很像是马鞍的形状
+	
+	\item \textbf{如何区分：}\\
+	局部最优值的Hessian矩阵为正定或者负定矩阵(特征值都正或者都负)，鞍点的Hessian矩阵的特征值有正有负，如果Hessian矩阵为半正定或者半负定矩阵，则需要进一步判断。
+\end{enumerate}
+	\end{sol}
+
+\end{document}

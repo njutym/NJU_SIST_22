@@ -1,0 +1,185 @@
+\documentclass[tikz,a4paper,UTF8]{article}
+\usepackage{ctex}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\newmdtheoremenv{thm-box}{myThm}
+\newmdtheoremenv{prop-box}{Proposition}
+\newmdtheoremenv{def-box}{定义}
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 10pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2023年秋季}                    
+\chead{数字信号处理}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业三}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+ \vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\numberwithin{equation}{section}
+%\usepackage[thmmarks, amsmath, thref]{ntheorem}
+\newtheorem{myThm}{myThm}
+\newtheorem*{myDef}{Definition}
+\newtheorem*{mySol}{Solution}
+\newtheorem*{myProof}{Proof}
+\newtheorem*{myRemark}{备注}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\usepackage{multirow}
+
+%--
+
+%--
+\begin{document}
+
+\title{数字信号处理\\
+    作业三}
+\author{你的名字\, 你的学号}
+\maketitle
+%%%%%%%% 注意: 使用XeLatex 编译可能会报错，请使用 pdfLaTex 编译 %%%%%%%
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+    \begin{enumerate}
+        \item[(1)] 本次作业提交截止时间为~\textcolor{red}{\textbf{2023/11/27  23:59:59}}，截止时间后不再接收作业，本次作业记零分        
+        \item[(2)] 作业提交方式：使用此~\LaTeX~模板书写解答，只需提交编译生成的~pdf~文件，将~pdf~文件上传至\href{https://table.nju.edu.cn/dtable/forms/b6525acd-3a73-44e0-bee4-ab17bf98f172/}{此~NJU Table}；
+        \item[(3)] pdf 文件命名方式：学号-姓名-作业号-v版本号, 例~ MG1900000-张三-1-v1；如果需要更改已提交的解答，请在截止时间之前提交新版本的解答，并将版本号加一；
+        \item[(4)] 未按照要求提交作业，或~pdf~命名方式不正确，将会被扣除部分作业分数。
+
+    \end{enumerate}
+\end{tcolorbox}
+
+
+\newpage
+\section{[28pts] 连续信号的傅里叶变换}
+\begin{enumerate}[(1)]
+    \item 求 $x(t)=\left\{\begin{array}{rl}2-t, & 0 \leq t \leq 2 \\ 0, & t \text { 为其它值 }\end{array}\right.$ 的傅里叶变换 $X(j \Omega)$;
+    \item 求 $y(t)=\left\{\begin{array}{rl}-t, & -2 \leq t \leq 0 \\ 0, & t \text { 为其它值 }\end{array}\right.$ 的傅里叶变换 $Y(j \Omega)$;
+    \item $y(t)$ 可以看成由 $x(t)$ 在时域上平移所得, 请据此由 (1) (2) 两问的运算结果直接写出傅里叶变换的时移特性。
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[40pts] 系统的性质 }
+设 $X(j\Omega)$ 是下图所示信号 $x(t)$ 的频谱，试在不计算 $X(j\Omega)$ 具体表达式的情况下完成以下计算：
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[scale=0.8]
+		\begin{axis}[
+			axis lines=middle,
+			axis equal,
+			grid=minor,
+			xmin=-2, xmax=4,
+			ymin=0, ymax=3,
+			xlabel=$t$, ylabel=$x(t)$,
+			xtick={-1, 0, 1, 2, 3},
+			ytick={1, 2},
+			yticklabels={1, 2},
+			xticklabels={-1, 0, 1, 2, 3},
+			xlabel style={at={(axis description cs:1,0.18)},anchor=north},
+			ylabel style={at={(axis description cs:0.33,0.95)},anchor=east},
+			]
+			
+			\addplot+[black, no marks, domain=-1:0, samples=100]{2+2*x};
+			\addplot+[black, no marks, domain=0:2, samples=100]{2};
+			\addplot+[black, no marks, domain=2:3, samples=100]{6-2*x};
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig1}
+\end{figure}
+
+\begin{enumerate}[(1)]
+	\item $X(0)$
+	\item $\displaystyle\int^{\infty}_{-\infty}X(j\Omega)d\Omega$
+	\item $\displaystyle\int^{\infty}_{-\infty}X(j\Omega)\frac{2\sin\Omega}{\Omega}e^{j3\Omega}d\Omega$
+	\item $\displaystyle\int^{\infty}_{-\infty}\left|X(j\Omega)\right|^2d\Omega$
+\end{enumerate}
+
+
+
+
+
+\begin{framed}
+	\begin{spacing}{1.5}
+		\begin{itemize}
+			\item 你的答案。
+		\end{itemize}
+	\end{spacing}
+\end{framed}
+
+
+
+
+\newpage
+\section{[32pts] 信号的采样}
+\begin{enumerate}
+	\item 对于实数信号~$x(t)$，已知用频率~$\omega_s=1500 \pi \text{ rad/s}$~采样时，信号可由其样本点唯一确定，请说明当~$\omega$~满足什么条件时能够使~$X(j\omega)=0$;
+	\item 计算下列信号的奈奎斯特频率
+	\begin{enumerate}
+		\item $x(t)=\frac{\sin(2000\pi t)}{\pi t}$;
+		\item $x(t)=x_1 \bigl(\frac{t}{2}\bigr) x_2 (2t)$，其中，$x_1 (t)$ 的最高频率为 150Hz，$x_2 (t)$ 的最高频率为 100Hz.
+	\end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+
+
+\end{document}

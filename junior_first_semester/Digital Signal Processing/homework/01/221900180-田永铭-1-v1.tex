@@ -1,0 +1,298 @@
+\documentclass[a4paper,UTF8]{article}
+\usepackage{ctex}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{ifpdf}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage{setspace}
+
+\newmdtheoremenv{thm-box}{myThm}
+\newmdtheoremenv{prop-box}{Proposition}
+\newmdtheoremenv{def-box}{定义}
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\pgfplotsset{compat=1.18}
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 12pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2024年秋季}                    
+\chead{数字信号处理}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业一}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+ \vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\numberwithin{equation}{section}
+%\usepackage[thmmarks, amsmath, thref]{ntheorem}
+\newtheorem{myThm}{myThm}
+\newtheorem*{myDef}{Definition}
+\newtheorem*{mySol}{Solution}
+\newtheorem*{myProof}{Proof}
+\newtheorem*{myRemark}{备注}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\usepackage{multirow}
+
+%--
+
+%--
+\begin{document}
+
+\title{数字信号处理\\
+    作业一}
+\author{田永铭\, 221900180}
+\maketitle
+%%%%%%%% 注意: 使用XeLatex 编译可能会报错，请使用 pdfLaTex 编译 %%%%%%%
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+    \begin{enumerate}
+       \item[(1)] 本次作业提交截止时间为~\textcolor{red}{\textbf{2024/10/30  23:59:59}}，截止时间后不再接收作业；
+        \item[(2)] 作业提交方式：使用此~LaTex~模板书写解答，不允许使用手写图片替代~LaTex~格式解题过程，只需提交编译生成的~pdf~文件，将~pdf~文件发送至邮箱：779652674@qq.com；
+        \item[(3)] pdf 文件命名方式：学号-姓名-作业号-v版本号, 例~ 1900000-张三-1-v1；如果需要更改已提交的解答，请在截止时间之前提交新版本的解答，并将版本号加一；
+        \item[(4)] 作业提交规范占5分，未按照要求提交作业，或~pdf~命名方式不正确，将会被扣除此部分分数。
+
+    \end{enumerate}
+\end{tcolorbox}
+
+\newpage
+\section{[15pts]}
+判断下列信号的周期性，并回答\textbf{是}、\textbf{否}。如果是周期信号，请给出其最小正周期。
+\begin{enumerate}[(1)]
+    \item $x(t)=3\cos(4t+\frac{\pi}3)$
+    \item $x(t)=[cos 2\pi t]u(t)$
+    \item $x(n)=2\cos \frac{n\pi}{4}+3\sin \frac{n\pi}{6}-cos \frac{n\pi}{2}$。
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+    	解：
+        \begin{enumerate}[(1)]
+            \item $x(t)$\textbf{是},是周期的，因为这是标准的余弦函数，$\omega = 4$, 所以周期$T = \frac{2\pi}{4} = \frac{\pi}{2}$.
+            \item $x(t)$\textbf{否},不是周期的，因为经过$u(t)$的作用，$x(t)$的负半轴为$0$,正半轴为余弦函数，显然没有周期性。
+            \item $x(t)$\textbf{是},是周期的，周期为24 ，理由如下：离散信号若有周期，则$\frac{\omega}{2\pi} = \frac{m}{N}$ 必须是整数，所以：
+            \[
+            \left\{
+            \begin{aligned}
+            	\frac{w_1}{2\pi} &= \frac{\frac{\pi}{4}}{2\pi} = \frac{1}{8},\quad N_1 = 8\\
+            	\frac{w_2}{2\pi} &= \frac{\frac{\pi}{6}}{2\pi} = \frac{1}{12},\quad N_2 = 12\\
+            	\frac{w_3}{2\pi} &= \frac{\frac{\pi}{2}}{2\pi} = \frac{1}{4},\quad N_3 = 4\\
+            \end{aligned}
+            \right.
+            \]
+            所以周期为$N_1，N_2，N_3$的公倍数$24$.
+        \end{enumerate}
+    \end{spacing}
+\end{framed}
+
+
+
+
+\newpage
+\section{[15pts]}
+试判断以下系统的性质：记忆、因果、线性、时不变、稳定性：
+\begin{enumerate}[(1)]
+    \item $y(t) = e^{x(t)}$
+    \item $y[n] = x[n-2] - x[n+1]$
+    \item $y(t) = \sin(4t)x(t)$
+\end{enumerate}
+
+\begin{framed}
+	解：
+        \begin{enumerate}[(1)]
+            \item
+            \begin{itemize}
+            	\item \textbf{无记忆：}因为与过去和将来的激励都无关.
+            	\item \textbf{是因果系统：}因为与将来激励无关.
+            	\item \textbf{非线性：}因为不满足齐次性，因为记$x_1(t) = ax(t)$,输出$x_1\rightarrow y_1 : e^{x_1(t)} = e^{ax(t)} \neq ay(t)$.
+            	\item \textbf{有时不变性：}
+            	因为记$x_1(t)$为$x(t-t_0)$,输出为$x_1\rightarrow y_1:e^{x_1(t)} = e^{x(t-t_0)}  = y(t-t_0).$
+            	\item \textbf{稳定：}设$|x(t)|< M$($M$为有限大的正数)，则对$\forall t$,$|y(t)| = |e^{x(t)}| < |e^M|$有限。
+            \end{itemize}
+            \item
+            \begin{itemize}
+            	\item \textbf{有记忆：}因为与过去和将来的激励都有关.
+            	\item \textbf{非因果系统：}因为与将来激励有关.
+            	\item \textbf{线性：}因为设$x_1[n]\rightarrow y_1[n] = x_1[n-2] - x_1[n+1],x_2[n]\rightarrow y_2[n] = x_2[n-2] - x_2[n+1]$.令$x_3[n] = ax_1[n]+bx_2[n]$,则$x_3[n]\rightarrow y_3[n] = x_3[n-2] - x_3[n+1] = ax_1[n-2]+bx_2[n-2] + ax_1[n+1]+bx_2[n+1] = a(x_1[n-2] + x_1[n+1]) + b(x_2[n-2] + x_2[n+1]) = ay_1[n] + by_2[n]$.
+            	\item \textbf{有时不变性：}因为记$x_1[n]$为$x[n-n_0]$,输出为$x_1\rightarrow y_1:x_1[n-2] - x_1[n+1] = x[n-2-n_0]- x[n+1-n_0] = y[n-n_0]$.
+            	\item \textbf{稳定：}设$|x[n]|< M$($M$为有限大的正数)，则对$\forall n$,$|y[n]| = |x[n-2] - x[n+1]| < |2M|$有限。
+            \end{itemize}
+            \item
+            \begin{itemize}
+            	\item \textbf{无记忆：}因为与过去和将来的激励都无关.
+            	\item \textbf{是因果系统：}因为与将来激励无关.
+            	\item \textbf{线性：}因为设$x_1(t)\rightarrow y_1(t) = sin(4t)x_1(t),x_2(t)\rightarrow y_2(t) = sin(4t)x_2(t)$.令$x_3(t) = ax_1(t)+bx_2(t)$,则$x_3(t)\rightarrow y_3(t) = sin(4t)x_3(t) =
+            	sin(4t)(ax_1(t)+bx_2(t)) = asin(4t)x_1(t)+bsin(4t)x_2(t)= ay_1(t)+by_2(t)$.
+            	\item \textbf{是时变的：}
+            	因为记$x_1(t)$为$x(t-t_0)$,输出为$x_1\rightarrow y_1 = sin(4t)x_1(t) = sin(4t)x(t-t0) \neq y(t-t_0).$
+            	\item \textbf{稳定：}设$|x(t)|< M$($M$为有限大的正数)，则对$\forall t$,$|y(t)| < 1 \times M = M$有限。
+            \end{itemize}
+        \end{enumerate}
+\end{framed}
+
+
+
+
+
+\newpage
+\section{[20pts]}
+求下列积分的值：
+\begin{enumerate}[(1)]
+    \item $\int_{-4}^{4} (t^{2} + 3t + 2)[\delta(t)+\delta(t-1)]dt$
+    \item $\int_{-\pi}^{\pi} (1-\cos{t}) \delta(t-\frac{\pi}{2})dt$
+\end{enumerate}
+
+\begin{framed}
+	解：
+    \begin{spacing}{1.5}
+        \begin{enumerate}[(1)]
+            \item 
+            \begin{align*}
+            	&\quad\int_{-4}^{4} (t^{2} + 3t + 2)[\delta(t)+\delta(t-1)]dt\\
+            	&= \int_{-4}^{4} (t^{2} + 3t + 2)\delta(t)dt + \int_{-4}^{4} (t^{2} + 3t + 2)\delta(t-1)dt\\
+            	&= \int_{-4}^{4} (0^{2} + 3\cdot0 + 2)\delta(t)dt + \int_{-4}^{4} (1^{2} + 3\cdot1 + 2)\delta(t-1)dt\\
+            	&= 2 + 6 \quad\text{(冲激信号仅在0处有值)} \\
+            	&= 8.
+            \end{align*}
+            所以积分值为8.
+            \item 
+            \begin{align*}
+            	&\quad\int_{-\pi}^{\pi} (1-\cos{t}) \delta(t-\frac{\pi}{2})dt\\
+            	&= \int_{-\pi}^{\pi} (1-\cos{\frac{\pi}{2}}) \delta(t-\frac{\pi}{2})dt\\
+            	&= 1\times1\\
+            	&= 1.
+            \end{align*}
+            所以积分值为1.
+        \end{enumerate}
+    \end{spacing}
+\end{framed}
+\newpage
+
+
+
+
+\newpage
+\section{[15pts]}
+证明：$\delta(2t)=\frac{1}{2}\delta(t)$
+
+\begin{framed}
+    \begin{spacing}{1.5}
+      证明：
+      首先根据抽样特性有：
+      $\int_{-\infty}^{+\infty}\delta(t)f(t)dt = f(0)$.
+      因此：
+      \begin{align*}
+      	&\quad\int_{-\infty}^{+\infty}\delta(2t)f(t)dt\\
+      	&= \int_{-\infty}^{+\infty}\delta(t^\prime)f(\frac{t^\prime}{2})d(\frac{t^\prime}{2}) \quad\text{(令$t^\prime = 2t$)}\\
+      	&= \frac{1}{2}\int_{-\infty}^{+\infty}\delta(t)f(\frac{t}{2})dt\\
+      	&= \frac{1}{2}f(0).
+      \end{align*}
+      又因为$\int_{-\infty}^{+\infty}\frac{1}{2}\delta(t)f(t)dt = \frac{1}{2}f(0) = \int_{-\infty}^{+\infty}\delta(2t)f(t)dt $,所以由广义函数相等的准则可得:$\delta(2t)=\frac{1}{2}\delta(t)$.\\
+      \qed
+    \end{spacing}
+\end{framed}
+\newpage
+
+
+
+
+\newpage
+\section{[30pts]}
+求下列各函数 $x(t)$与 $h(t)$的卷积 $x(t)* h(t)$
+\begin{enumerate}[(1)]
+    \item $x(t)=(1+t)[u(t)-u(t-1)], \quad h(t)=u(t)-u(t-2)$
+    \item $ x(t) = u(t) -2u(t-2) + u(t-4), \quad h(t)=e^{2t} $
+\end{enumerate}
+
+\begin{framed}
+    \begin{enumerate}[(1)]
+            \item
+            \begin{align*}
+            	&\quad x(t)*h(t)\\
+            	&= (1+t)[u(t)-u(t-1)] * [u(t)-u(t-2)]\\
+            	&= [(1+t)u(t)-(1+t)u(t-1)]*u(t) - [(1+t)u(t-1)-(1+t)u(t)]*u(t-2).
+            \end{align*}
+            其中第一项：
+            \begin{align*}
+            	&\quad [(1+t)u(t)-(1+t)u(t-1)]*u(t)\\
+            	&= \int_{-\infty}^{+\infty}(1+\tau)[u(\tau)-u(\tau-1)]u(t-\tau)d\tau\\
+            	&= \int_{0}^{t}(1+\tau)d\tau - \int_{1}^{t}(1+\tau)d\tau\\
+            	&= \begin{cases}
+            		0, & t < 0, \\
+            		t + \frac{t^2}{2}, & 0 \leq t < 1, \\
+            		\frac{3}{2}, & t \geq 1.
+            	\end{cases}
+            \end{align*}
+            第二项：
+            \begin{align*}
+            	&\quad [(1+t)u(t)-(1+t)u(t-1)]*u(t-2)\\
+            	&= \int_{-\infty}^{+\infty}(1+\tau)[u(\tau)-u(\tau-1)]u(t-\tau-2)d\tau\\
+            	&= \int_{0}^{t-2}(1+\tau)d\tau - \int_{1}^{t-2}(1+\tau)d\tau\\
+            	&= \begin{cases}
+            		0, & t < 2, \\
+            		t-2 + \frac{(t-2)^2}{2}, & 2 \leq t < 3, \\
+            		\frac{3}{2}, & t \geq 3.
+            	\end{cases}
+            \end{align*}
+            所以，原式计算结果为：
+            \newpage
+            \begin{align*}
+            x(t)*h(t)&=
+            \begin{cases}
+            	0, & t < 0, \\
+            	t + \frac{t^2}{2}, & 0 \leq t < 1, \\
+            	\frac{3}{2}, & 1 \leq t < 2,\\
+            	-\frac{t^2}{2}+t+\frac{3}{2}, & 2 \leq t < 3,\\
+            	0, &t \geq 3.
+            \end{cases}\\
+            &= (t + \frac{t^2}{2})[u(t)-u(t-1)] + \frac{3}{2}[u(t-1)-u(t-2)] + (-\frac{t^2}{2}+t+\frac{3}{2})[u(t-2)-u(t-3)].
+            \end{align*}
+     
+    \item  
+    \begin{align*}
+    	&\quad x(t)*h(t)\\
+    	&= [u(t) -2u(t-2) + u(t-4)] * e^{2t}\\
+    	&= u(t) * e^{2t} - 2u(t-2)* e^{2t}+ u(t-4) * e^{2t}\\
+    	&= \int_{-\infty}^{t}e^{2t}dt -2\int_{-\infty}^{t-2}e^{2t}dt + \int_{-\infty}^{t-4}e^{2t}dt\\
+    	&= \frac{1}{2}e^{2t} - e^{2t-4} + \frac{1}{2}e^{2t-8}.
+    \end{align*}
+\end{enumerate}
+\end{framed}
+\newpage
+
+
+\end{document} 

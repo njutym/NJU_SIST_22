@@ -1,0 +1,275 @@
+\documentclass[a4paper,UTF8]{article}
+\usepackage{ctex}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{ifpdf}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage{setspace}
+
+\newmdtheoremenv{thm-box}{myThm}
+\newmdtheoremenv{prop-box}{Proposition}
+\newmdtheoremenv{def-box}{定义}
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\pgfplotsset{compat=1.18}
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 12pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2024年秋季}                    
+\chead{数字信号处理}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业二}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+ \vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\numberwithin{equation}{section}
+%\usepackage[thmmarks, amsmath, thref]{ntheorem}
+\newtheorem{myThm}{myThm}
+\newtheorem*{myDef}{Definition}
+\newtheorem*{mySol}{Solution}
+\newtheorem*{myProof}{Proof}
+\newtheorem*{myRemark}{备注}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\usepackage{multirow}
+
+%--
+
+%--
+\begin{document}
+
+\title{数字信号处理\\
+    作业二}
+\author{田永铭\, 221900180}
+\maketitle
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+    \begin{enumerate}
+       \item[(1)] 本次作业提交截止时间为~\textcolor{red}{\textbf{2024/12/11  23:59:59}}，截止时间后不再接收作业；
+        \item[(2)] 作业提交方式：使用此~LaTex~模板书写解答，不允许使用手写图片替代~LaTex~格式解题过程，只需提交编译生成的~pdf~文件，将~pdf~文件发送至邮箱：779652674@qq.com；
+        \item[(3)] pdf 文件命名方式：学号-姓名-作业号-v版本号, 例~ 1900000-张三-1-v1；如果需要更改已提交的解答，请在截止时间之前提交新版本的解答，并将版本号加一；
+        \item[(4)] 作业提交规范占5分，未按照要求提交作业，或~pdf~命名方式不正确，将会被扣除此部分分数。
+    \end{enumerate}
+\end{tcolorbox}
+
+\newpage
+\section{[20pts]}
+解差分方程（$n\ge 0$），并指出其零输入响应、零状态响应、自由响应、强迫响应各分量。（假定系统为因果系统）
+$$y[n]+3y[n-1]+2y[n-2]=0,y[-1]=2,y[-2]=1$$
+
+\begin{framed}
+	   	解：
+   \begin{itemize}
+		\item \textbf{解方程：}
+		
+	特征方程为:
+	\[
+	\alpha^2 + 3\alpha + 2 = 0,
+	\]
+	解得：$\alpha_1 = -1,\alpha_2 = -2$.
+	所以齐次解为$y_h = A(-1)^n + B(-2)^n$.
+	由于方程输入为$0$,所以特解为$y_p = 0$.所以完全解为$y = y_h + y_p = A(-1)^n + B(-2)^n$.
+	利用原式可以得到: $y[0] + 3y[-1] + 2y[-2] = 0$, 以及 $y[1]+3y[0] + 2y[-1] = 0$, 所以$y[1] = 20, y[0] = -8.$因此
+	$$
+	\begin{cases}
+		A(-1)^0+ B(-2)^0 = -8,\\
+		A(-1)^1+ B(-2)^1 = 20,\\
+	\end{cases}
+	$$解得：$A = 4, B = -12$.
+	因此完全解为$y = 4\cdot(-1)^n - 12\cdot(-2)^n(n \geq 0).$
+	
+	\item \textbf{各个部分:}
+	
+	由于系统原方程本身就没有外部驱动，所以\textbf{零输入响应}和\textbf{自由响应}相等，均等于$4\cdot(-1)^n - 12\cdot(-2)^n$;\textbf{零状态响应}和\textbf{强迫响应}相等，均等于$0$.
+   \end{itemize}
+\end{framed}
+
+
+\newpage
+\section{[40pts]}
+确定下列离散时间周期信号的傅里叶级数，并写出每一组系数$a_{k}$的模和相位。
+\begin{enumerate}[(1)]
+    \item $x[n]=\sum\limits_{m=-\infty}^{\infty}\{2\delta{[n-4m]}+4\delta{[n-1-4m]}\}$
+    \item $x[n]=1-\sin{(\pi n/4)},0\le n\le 11$,且$x[n]$以12为周期
+\end{enumerate}
+
+\begin{framed}
+	解：
+    \begin{enumerate}[(1)]
+       \item 该信号周期为4，系数为：
+       \begin{align*}
+       	a_k &= \frac{1}{4}\sum\limits_{n = 0}^{3}\sum\limits_{m=-\infty}^{\infty}\{2\delta{[n-4m]}+4\delta{[n-1-4m]}\}e^{-jnwk}\\
+       	&= \frac{1}{4}[2+4e^{-jwk}]\\
+       	&= \frac{1}{2} + e^{-j\frac{\pi k}{2}}\quad(k = 0,1,2,3)
+       \end{align*}
+      
+       亦可写为$\frac{1}{2} + cos(\frac{\pi k}{2})-jsin(\frac{\pi k}{2})$,因此有：
+       
+       傅里叶级数为：
+       $x[n] = \sum\limits_{k=0}^{3}a_ke^{j\frac{n\pi k}{2}}$, 其中$a_k = \frac{1}{2} + e^{-j\frac{\pi k}{2}}(k = 0,1,2,3)$.
+       
+       系数的模和相位如下：
+       \begin{itemize}
+       	\item \( |a_0| = 1.5, \quad \arg(a_0) = 0 \)
+       	\item \( |a_1| = \sqrt{0.5^2 + (-1)^2} = \sqrt{1.25} , \quad \arg(a_1) = -\arctan2 \)
+       	\item \( |a_2| = 0.5, \quad \arg(a_2) = \pi \)(负实数相位)
+       	\item \( |a_3| = \sqrt{0.5^2 + 1^2} = \sqrt{1.25}, \quad \arg(a_3) = \arctan2 \)
+       \end{itemize}
+       
+       \item  该信号周期为12，系数为：
+       \begin{align*}
+       	a_k &= \frac{1}{12}\sum\limits_{n = 0}^{11}(1-sin(\pi n/4))e^{\frac{-jn\pi k}{6}}\\
+       	& = \frac{1}{12}\sum\limits_{n = 0}^{11}e^{\frac{-jn\pi k}{6}} - \frac{1}{12}\sum\limits_{n = 0}^{11}sin(\pi n/4)e^{\frac{-jn\pi k}{6}}\quad(k = 0,1,2,\cdots,11)
+       \end{align*}
+      	 (I) 第一部分：常数项
+      	\[
+      	\frac{1}{12} \sum_{n=0}^{11} e^{-j \frac{\pi k n}{6}} = 
+      	\begin{cases}
+      		1, & \text{如果} \ k = 0 \\
+      		0, & \text{如果} \ k \neq 0
+      	\end{cases}
+      	\]
+      	
+      	 (II) 第二部分：正弦项
+      	将 $\sin\left(\frac{\pi n}{4}\right)$ 转化为复指数形式，得到：
+      	
+      	\[
+      	\sin\left(\frac{\pi n}{4}\right) = \frac{e^{j \frac{\pi n}{4}} - e^{-j \frac{\pi n}{4}}}{2j}
+      	\]
+      	
+      	然后代入得：
+      	
+      	\[
+      	\frac{1}{24j} \left[ \sum_{n=0}^{11} e^{j \frac{n}{12} (3\pi - 2\pi k)} - \sum_{n=0}^{11} e^{-j \frac{n}{12} (3\pi - 2\pi k)} \right]
+      	\]
+      	
+      	\textbf{计算 \( e^{j \frac{\pi n}{4}} \) 项的傅里叶系数:}
+      	\[
+      	a_k^{(1)} = \frac{1}{24j} \sum_{n=0}^{11} e^{j \frac{\pi n}{4}} e^{-j \frac{2\pi k}{12} n} = \frac{1}{24j} \sum_{n=0}^{11} e^{j \left( \frac{\pi}{4} - \frac{2\pi k}{12} \right) n}
+      	\]
+      	令 \( \omega_k = \frac{\pi}{4} - \frac{2\pi k}{12} \)，则：
+      	\[
+      	a_k^{(1)} = \frac{1}{24j} \sum_{n=0}^{11} e^{j \omega_k n}
+      	\]
+      	这是一个等比数列，使用等比数列求和公式：
+      	\[
+      	\sum_{n=0}^{11} e^{j \omega_k n} = \frac{1 - e^{j 12 \omega_k}}{1 - e^{j \omega_k}}
+      	\]
+      	由于 \( e^{j 12 \omega_k} = e^{j 3\pi} = -1 \)，得到：
+      	\[
+      	\sum_{n=0}^{11} e^{j \omega_k n} = \frac{2}{1 - e^{j \omega_k}}
+      	\]
+      	因此傅里叶系数为：
+      	\[
+      	a_k^{(1)} = \frac{1}{24j} \cdot \frac{2}{1 - e^{j \omega_k}} = \frac{1}{12j} \cdot \frac{1}{1 - e^{j \omega_k}}
+      	\]
+      	
+      	\textbf{计算 \( e^{-j \frac{\pi n}{4}} \) 项的傅里叶系数:}
+      	同理可得：
+      	\[
+      	a_k^{(2)} = \frac{1}{24j} \sum_{n=0}^{11} e^{-j \frac{\pi n}{4}} e^{-j \frac{2\pi k}{12} n} = \frac{1}{12j} \cdot \frac{1}{1 - e^{-j \omega_k}}
+      	\]
+      	
+      	
+      	\textbf{最终傅里叶级数系数为:}
+      $a_k = \mathbb{I}(k = 0) + \frac{1}{12j}\cdot\frac{1}{1-e^{j\pi(\frac{1}{4}-\frac{k}{6})}} +\frac{1}{12j}\cdot\frac{1}{1-e^{-j\pi(\frac{1}{4}-\frac{k}{6})}} = \mathbb{I}(k = 0) - \frac{j}{12} $, 其中$\mathbb{I}(\cdot) = \begin{cases}
+      	1, \cdot\text{条件成立}\\
+      	0, \text{otherwise}.
+      \end{cases}$
+      	
+      	\textbf{傅里叶级数为：}
+      	$x[n] = \sum\limits_{k=0}^{11}a_ke^{j\frac{n\pi k}{6}}$, 其中$a_k$定义如上.
+      	
+      	\textbf{模和相位：}
+      \textbf{对于$a_0$:}
+      
+      $a_0 = 1 - \frac{j}{12}$, 模为$\sqrt{\frac{145}{144}}$, 相位为$-\arctan\frac{1}{12}.$
+      
+      \textbf{对于$a_k(k = 1,2,3,\cdots,11)$}:
+      
+      $a_k = -\frac{j}{12}$, 模为$\frac{1}{12}$, 相位为-$\frac{\pi}{2}$.
+     
+       
+    \end{enumerate}
+\end{framed}
+
+
+
+
+
+\newpage
+\section{[40pts]}
+求下列信号的离散时间傅里叶变换。
+\begin{enumerate}[(1)]
+    \item $2^{n}\cdot u[-n]$
+    \item $(a^{n}\cos{\omega_{0}n})u[n],\left | a \right | < 1$
+\end{enumerate}
+
+\begin{framed}
+    \begin{enumerate}[(1)]
+		\item 
+		利用定义即可计算出原信号离散时间傅里叶变换为：
+		\begin{align*}
+&\quad X(e^{jw}) \\
+&= \sum\limits_{n = -\infty}^{\infty}x[n]e^{-jwn}\\
+&= \sum\limits_{n = -\infty}^{\infty}2^n\cdot u[-n] e^{-jwn}\\
+&= \sum\limits_{n = -\infty}^{0}2^n\cdot e^{-jwn}\\
+&= \sum\limits_{m = 0}^{\infty}2^{-m}\cdot e^{jwm}\\
+&= \sum\limits_{m = 0}^{\infty}{(\frac{e^{jw}}{2})}^m\\
+&= \frac{1}{1-\frac{e^{jw}}{2}}.
+		\end{align*}
+
+		\item
+		\begin{align*}
+&\quad (a^ncos\omega_0n)u[n] \\
+&= a^n \frac{e^{j\omega_0n} + e^{-j\omega_0n}}{2}u[n]
+		\end{align*}
+		
+		已知单边指数信号的离散傅里叶变换对如下：
+		
+		$a^nu[n]  \leftrightarrow \frac{1}{1-ae^{-j\omega}} \quad(|a| < 1)$.
+		
+		所以利用频移特性可得原信号的离散时间傅里叶变换为：
+		
+		\[\frac{1}{2}(\frac{1}{1-ae^{-j(\omega-\omega_0)}} + \frac{1}{1-ae^{-j(\omega+\omega_0)}}).\]
+		
+    \end{enumerate}
+\end{framed}
+
+
+\end{document} 

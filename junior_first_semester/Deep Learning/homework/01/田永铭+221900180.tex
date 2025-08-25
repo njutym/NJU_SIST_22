@@ -1,0 +1,583 @@
+\documentclass{article}
+
+
+% 中文支持
+\usepackage[UTF8,heading = true]{ctex}
+
+
+% 页面布局
+\usepackage[a4paper]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\Lhead}[1]{\fancyhead[L]{#1}}
+\newcommand{\Chead}[1]{\fancyhead[C]{#1}}
+\newcommand{\Rhead}[1]{\fancyhead[R]{#1}}
+\newcommand{\Lfoot}[1]{\fancyfoot[L]{#1}}
+\newcommand{\Cfoot}[1]{\fancyfoot[C]{#1}}
+\newcommand{\Rfoot}[1]{\fancyfoot[R]{#1}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage{lastpage}
+%待填信息
+% -----------------------------------------------------
+\newcommand{\Course}{深度学习平台与应用}             		%      |
+\newcommand{\Assignment}{深度学习作业 1}		  %      | 
+\newcommand{\Name}{田永铭}				    	 %      |
+\newcommand{\ID}{221900180}				  	   %       |
+\newcommand{\Email}{tianym2022@smail.nju.edu.cn}  %    |
+% ------------------------------------------------------
+\fancyhead[L]{\Course}
+\fancyhead[C]{\Assignment}
+\fancyhead[R]{\ID \Name}
+\fancyfoot[C]{\thepage\ / \pageref*{LastPage}}	
+\setlength\headheight{36pt}
+% 自定义页面样式第一页只有页脚没有页眉
+\makeatletter
+\def\ps@onlyfoot{
+	\let\@oddhead\@empty
+	\let\@evenhead\@empty
+	\def\@oddfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+	\def\@evenfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+}
+\makeatother
+% maketitle
+\title{\Huge\Assignment}
+\author{\ID \Name \quad\href{mailto:tianym2022@smail.nju.edu.cn}{\color{magenta}\Email}}
+\date{\today}
+
+
+% 字体和颜色
+\usepackage{fontspec} 
+\fontsize{12pt}{\baselineskip}\selectfont
+\usepackage{xcolor}
+
+
+% 数学支持
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{esint}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% 左边大括号
+%\[
+%\left\{
+%\begin{aligned}
+%	& \text{approximate  covariance matrix of GP} \\
+%	& \text{only use subset}\\
+%	& \text{conditional independence assumption}
+%\end{aligned}
+%\right.
+%\]
+
+% 矩阵
+%\[
+%\begin{matrix}
+%	a & b \\
+%	c & d
+%\end{matrix}
+%\]
+
+% 行列式
+%\[
+%\begin{vmatrix}
+%	a & b \\
+%	c & d
+%\end{vmatrix}
+%\]
+
+
+% 标题格式
+\usepackage{titlesec}
+% 自定义 section 标题格式
+\renewcommand{\thesection}{\chinese{section}、}
+\titleformat{\section}
+{\normalfont\Large\bfseries\centering\color[rgb]{0,0,0.8}} % 设定字体和大小
+{\thesection}{0em} % 设定编号和标题之间的距离
+{}
+% 自定义 subsection 标题格式
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection} }
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color[rgb]{0.23,0.65,0.99}}
+{\thesubsection}{0em}
+{}
+% 自定义 subsubsection 标题格式
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection} }
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}
+{\thesubsubsection}{0em}
+{}
+% 设置 section 标题的间距
+\titlespacing*{\section}
+{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+% 设置 subsection 标题的间距
+\titlespacing*{\subsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% 设置 subsubsection 标题的间距
+\titlespacing*{\subsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+% 代码 
+% 如非默认，需使用[language=xxx,style=mystyle]
+\usepackage{listings}
+% language:  {[x86masm]Assembler}(汇编); python; C; C++; Java; SQL; Matlab; R; bash; make(makefile)
+\lstdefinestyle{mystyle}{
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny\color{magenta},
+	stepnumber=1,
+	numbersep=10pt,
+	backgroundcolor=\color[rgb]{0.95,0.95,0.95},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	rulecolor=\color{black},
+	tabsize=2,
+	captionpos=b,
+	breaklines=true,
+	breakatwhitespace=false,
+	title=\lstname,
+	keywordstyle=\color{blue},
+	commentstyle=\color[rgb]{0.0,0.5,0.0},
+	stringstyle=\color[rgb]{0.23,0.65,0.99}\itshape,
+	escapeinside={\%*}{*)},
+	morekeywords={}, % 添加更多关键字
+	literate=
+	{[}{{{\color{red}[}}}1
+	{]}{{{\color{red}]}}}1
+	{\{}{{{\color[rgb]{0.9,0,0.9}\{}}}1
+	{\}}{{{\color[rgb]{0.9,0,0.9}\}}}}1
+%	{0}{{{\color[rgb]{0.2,0.9,0.4}0}}}1
+%	{1}{{{\color[rgb]{0.2,0.9,0.4}1}}}1
+%	{2}{{{\color[rgb]{0.2,0.9,0.4}2}}}1
+%	{3}{{{\color[rgb]{0.2,0.9,0.4}3}}}1
+%	{4}{{{\color[rgb]{0.2,0.9,0.4}4}}}1
+%	{5}{{{\color[rgb]{0.2,0.9,0.4}5}}}1
+%	{6}{{{\color[rgb]{0.2,0.9,0.4}6}}}1
+%	{7}{{{\color[rgb]{0.2,0.9,0.4}7}}}1
+%	{8}{{{\color[rgb]{0.2,0.9,0.4}8}}}1
+%	{9}{{{\color[rgb]{0.2,0.9,0.4}9}}}1
+}
+\lstset{style=mystyle}
+
+
+% 图表
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font={small}}
+\usepackage{diagbox}
+\usepackage{array}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% 表1
+%\begin{table}[h!]
+%	\centering
+%	\caption{Performance comparison on mini-ImageNet and tiered-ImageNet datasets.}
+%	\begin{tabular}{@{}lcccccccc@{}}
+%		\toprule
+%		Dataset & Method & Backbone & 5-way 1-shot \\
+%		\midrule
+%		\multirow{9}{*}{\rotatebox[origin=c]{90}{mini-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.291 \\
+%		& MAML & Conv-4 & 49.704 \\
+%		& BOIL & Conv-4 & 48.456 \\
+%		& CAN & ResNet-12 & 59.493\\
+%		& LEO & ResNet-12 & 55.056 \\
+%		& SKD & ResNet-12 & 66.700  \\
+%		& R2D2 & ResNet-12 & 59.802 \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{68.727} \\
+%		\midrule
+%		\multirow{6}{*}{\rotatebox[origin=c]{90}{tiered-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.653 \\
+%		& Relation Networks & Conv-4 & 55.107  \\
+%		& MAML & Conv-4 & 51.038 \\
+%		& R2D2 & ResNet-12 & 64.916  \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{66.598} \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+% 表2
+%\begin{table}[t]
+%	\caption{Classification accuracies for naive Bayes and flexible
+%		Bayes on various data sets.}
+%	\label{sample-table}
+%	\vskip 0.15in
+%	\begin{center}
+%		\begin{small}
+%			\begin{sc}
+%				\begin{tabular}{lcccr}
+%					\toprule
+%					Data set & Naive & Flexible & Better? \\
+%					\midrule
+%					Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
+%					Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
+%					Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
+%					Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
+%					Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
+%					Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
+%					Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
+%					Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
+%					\bottomrule
+%				\end{tabular}
+%			\end{sc}
+%		\end{small}
+%	\end{center}
+%	\vskip -0.1in
+%\end{table}
+
+
+% 算法
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\begin{algorithm}[tb]
+%	\caption{Bubble Sort}
+%	\label{alg:example}
+%	\begin{algorithmic}
+	%		\STATE {\bfseries Input:} data $x_i$, size $m$
+	%		\REPEAT
+	%		\STATE Initialize $noChange = true$.
+	%		\FOR{$i=1$ {\bfseries to} $m-1$}
+	%		\IF{$x_i > x_{i+1}$}
+	%		\STATE Swap $x_i$ and $x_{i+1}$
+	%		\STATE $noChange = false$
+	%		\ENDIF
+	%		\ENDFOR
+	%		\UNTIL{$noChange$ is $true$}
+	%	\end{algorithmic}
+%\end{algorithm}
+
+% 超链接
+\usepackage{hyperref}
+
+
+% 论文参考文献
+% 需在正文结尾加入 \bibliography{references}，在同目录下创建references.bib
+\bibliographystyle{plain}
+
+
+% 表情
+% https://ctan.math.washington.edu/tex-archive/graphics/pgf/contrib/tikzsymbols/tikzsymbols.pdf
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+% 背景颜色：\colorbox{yellow}{...}
+% 3D版本： 在前面加上d,比如：dSmiley
+
+% 常用
+% 笑脸：\Smiley[⟨scale⟩][⟨color⟩]
+% 哭脸：\Sadey[⟨scale⟩][⟨color⟩]
+% 生气脸： \Annoey[⟨scale⟩][⟨color⟩]
+% 大笑： \Laughey[⟨scale⟩][⟨color⟩][⟨mouth color⟩]
+% 挤眉弄眼： \Winkey[⟨scale⟩][⟨color⟩]
+% 去世： \Xey[⟨scale⟩][⟨color⟩]
+% 升天： \wInnocey[⟨scale⟩]
+% 口吐芬芳： \Vomey[⟨scale⟩][⟨color⟩][⟨vomit color⟩]
+% 猫： \Cat[⟨scale⟩]
+% 炸弹： \Ninja[⟨scale⟩][⟨color⟩][⟨headband color⟩][⟨eye color⟩]
+% 困： \Sleepey[⟨scale⟩][⟨color⟩][⟨cap color⟩][⟨star color⟩]
+% 口罩：\Maskey[⟨scale⟩][⟨color⟩][⟨mask color⟩]
+% 渐变弧度脸(-2到2)： \Changey[⟨scale⟩][⟨color⟩]{⟨mood⟩}
+% 树（春夏秋冬）： \Springtree[⟨scale⟩]
+% 咖啡： \Coffeecup[⟨scale⟩]
+
+
+
+% 简化命令
+\newcommand{\hs}[1]{\hspace{{#1}em}} %空格
+\newcommand{\qd}{\quad} %空格
+\newcommand{\qqd}{\qquad} %空格
+% 链接
+\newcommand{\myhref}[2]{\href{#1}{{\color[rgb]{0.9,0,0.9}{#2}}}}
+\newcommand{\myred}[1]{{\color{red}{#1}}} %红色
+% 图 args：figures下图片路径，大小，图片显示名
+\newcommand{\myfig}[3]{
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#2\linewidth]{figures/#1}
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+% 左右分栏插入图片
+% args: 左图文件名，左图宽度，左图标题，右图文件名，右图宽度，右图标题
+\newcommand{\mytwocolumnfig}[6]{
+	\begin{figure}[h!]
+		\centering
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#2\linewidth]{figures/#1}
+			\caption{#3}
+			\label{fig:#1}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#5\linewidth]{figures/#4}
+			\caption{#6}
+			\label{fig:#4}
+		\end{minipage}
+	\end{figure}
+}
+
+
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+
+\newtheorem{prob}[subsection]{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+
+
+\begin{document}
+	\maketitle
+	
+	\section{选择题(5*10=50pts)}
+	\begin{prob}
+		\textbf{反向传播}\\
+		反向传播在神经网络中的作用是:\\
+		A. 更新模型权重\\
+		B. 计算损失函数\\
+		C. 增加训练数据的多样性\\
+		D. 生成新的特征
+	\end{prob}
+	
+	\begin{sol}
+		A\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{池化层的作用}\\
+		池化层的主要作用是:\\
+		A. 增加特征图的分辨率 \\
+		B. 减少特征图的空间尺寸 \\
+		C. 提高图像的清晰度 \\
+		D. 增加网络的参数量
+	\end{prob}
+	
+	\begin{sol}
+		B\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{卷积层的输出尺寸}\\
+		假设输入尺寸为(32 * 32 * 3),滤波器大小为(3 * 3),一共3个，步长为1,填充为1,则输出尺寸为:\\
+		A. (30 * 30 * 3)\\ 
+		B. (32 * 32 * 3) \\
+		C. (28 * 28 *3) \\
+		D. (34 * 34 * 3)
+	\end{prob}
+	
+	\begin{sol}
+		B\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{激活函数的作用}\\
+		在卷积神经网络中，激活函数的主要作用是什么?\\
+		A. 增加网络的非线性能力\\ 
+		B. 归一化输入数据 \\
+		C. 减少计算量 \\
+		D. 都不是
+	\end{prob}
+	
+	\begin{sol}
+		A\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{卷积神经网络的历史}\\
+		卷积神经网络最早由谁提出?\\
+		A. Hinton \\
+		B. Krizhevsky \\
+		C. LeCun \\ 
+		D. Rosenblatt
+	\end{prob}
+	
+	\begin{sol}
+		C\\
+	\end{sol}
+	
+	
+	\section{应用题(5*10=50pts)}
+	
+	
+	\begin{prob}
+		\textbf{卷积层输出尺寸计算}\\
+		给定一个输入图像的尺寸为(64 * 64 * 3)(高 * 宽 * 通道数),卷积核大小为(5 * 5),一共1个，步长为2,填充为1,输出的特征图尺寸是多少?
+	\end{prob}
+	
+	\begin{sol}
+		在卷积中，如果不能整除则向下取整；在池化中，如果不能整除则向上取整。所以此处边长 = $[\frac{64+2*1-5}{2}+1] = 31$ (其中[$\cdot$]表示高斯取整函数)。\\
+		故输出的特征图尺寸是(31*31*1)。\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{池化层输出尺寸计算}\\
+		如果在一个(32 × 32 × 6)的特征图上应用(2 × 2)的最大池化层,步长为2,输出的特征图尺寸是多少?
+	\end{prob}
+	
+	\begin{sol}
+		边长 = $\frac{32+2*0-2}{2}+1 = 16$.\\
+		故输出的特征图尺寸是(16*16*6)。\\
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{卷积计算复杂度}\\
+		假设输入是\( c_i \times h \times w \),卷积核的大小为\( c_i \times c_o \times k_h \times k_w \),填充为\( (p_h, p_w) \),步长\( (s_h, s_w) \),请计算前向传播的计算成本(乘法和加法次数各是多少).
+	\end{prob}
+	
+	\begin{sol}
+		{\color{red} 这个问题的答案取决于题目考不考虑偏置项，我将分别给出两种情形下的答案：}
+		
+		1. 输出特征图的尺寸：
+		\[
+		H_{out} = \lfloor\frac{h + 2p_h - k_h}{s_h} + 1
+		\rfloor\]
+		\[
+		W_{out} = \lfloor\frac{w + 2p_w - k_w}{s_w} + 1\rfloor
+		\]，
+		其中$\lfloor\cdot\rfloor$表示下取整函数。
+		
+		2.  每个输出位置的计算成本： 
+		对于每个输出位置，需要进行 \(c_i \times k_h \times k_w\) 次乘法和 \(c_i \times k_h \times k_w - 1\) 次加法（如果有偏置就是\(c_i \times k_h \times k_w\)）次加法。
+		
+		3. 总计算成本：
+		
+		乘法次数：
+		\[
+		\text{乘法次数} = H_{out} \times W_{out} \times c_o \times (c_i \times k_h \times k_w)
+		= \lfloor\frac{h + 2p_h - k_h}{s_h} + 1
+		\rfloor \times \lfloor\frac{w + 2p_w - k_w}{s_w} + 1\rfloor \times c_o \times (c_i \times k_h \times k_w).
+		\]
+		
+		加法次数：\\
+		
+		\text{加法次数} = \[\left\{
+		\begin{aligned}
+			&\lfloor
+			\frac{h + 2p_h - k_h}{s_h} + 1
+			\rfloor \times \lfloor\frac{w + 2p_w - k_w}{s_w} + 1\rfloor \times c_o \times (c_i \times k_h \times k_w-1), \text{\color{red}如果不考虑偏置项}\\
+			& \lfloor
+			\frac{h + 2p_h - k_h}{s_h} + 1
+			\rfloor \times \lfloor\frac{w + 2p_w - k_w}{s_w} + 1\rfloor \times c_o \times (c_i \times k_h \times k_w), \text{\color{red}如果考虑偏置项}\\
+		\end{aligned}
+		\right.
+		\]
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{卷积层、池化层、全连接层的感受野如何计算？}
+	\end{prob}
+	
+	{\color{red} 已与老师讨论过，ppt上的简单的线性计算方式不完善，实际上感受野计算和步长是相关的。}
+	{\color{red} 以下解答中给出的均为感受野的边长，实际上感受野是边长乘边长}\\
+	
+	\begin{sol}
+		\begin{enumerate}
+			\item \textbf{卷积层：}\\
+			记$l_i(i = 0,1,2,\cdots,o)$为第$i$层的感受野，其中$l_0$表示输入层，$l_o$表示最终输出层。记$K_i,s_i$为从第$i-1$层变到第$i$层的卷积核的尺寸和步长（为了简便不妨设卷积核为方阵）。感受野与padding无关，与step有关，其计算方式是以递归的方式进行的，递归的定义如下：
+			\[\left\{
+			\begin{aligned}
+				&l_0 = 1\\
+				&l_{i} = l_{i-1} + ((K_i-1)*\prod_{j=1}^{i-1}s_j)
+			\end{aligned}
+			\right.\]
+			完整的图示和证明见后面图片(有点笔误，已修正)。
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"Figures/221900180 田永铭 感受野公式推导"}
+\end{figure}
+
+	\item \textbf{池化层：}\\
+	与卷积层计算方式一样。
+	
+	\item \textbf{全连接层：}\\
+	全连接层的感受野一般包含了整个输入的尺寸（即感受野大于等于输入的长*宽）。
+	如果要计算的话，就是将前一层的feature map看为卷积核大小继续计算，仅第一个FC层这么算，后面如果再跟FC层与前面的FC感受野保持一致。
+		\end{enumerate}
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{Alexnet网络中每一层对输入图像的感受野（包含卷积层、池化层、全连接层）是多少？}\\
+	\end{prob}
+	
+	\begin{sol}
+	{\color{red} 以下解答中给出的均为感受野的边长，实际上感受野是边长乘边长}\\
+	\textbf{Alexnet网络的输入为：227×227×3(RGB格式)，具体架构如下}：\\
+	Conv1：卷积核大小 \( 11 \times 11 \)，步长 4，填充 0\\
+	Pool1：池化核大小 \( 3 \times 3 \)，步长 2\\
+	Conv2：卷积核大小 \( 5 \times 5 \)，步长 1，填充 2\\
+	Pool2：池化核大小 \( 3 \times 3 \)，步长 2\\
+	Conv3：卷积核大小 \( 3 \times 3 \)，步长 1，填充 1\\
+	Conv4：卷积核大小 \( 3 \times 3 \)，步长 1，填充 1\\
+	Conv5：卷积核大小 \( 3 \times 3 \)，步长 1，填充 1\\
+	Pool5：池化核大小 \( 3 \times 3 \)，步长 2\\
+	FC6(4096个神经元)、FC7(4096个神经元)、FC8(100个神经元)：全连接层\\
+	
+	\textbf{每层的感受野计算(用R表示每层相对于输入感受野的边长):}\\
+	Conv1：卷积核 \( 11 \times 11 \)，步长 4：
+	\[
+	R_1 = 1 + (11 - 1) \times 1 = 11
+	\]\\
+	Pool1：池化核 \( 3 \times 3 \)，步长 2：
+	\[
+	R_2 = R_1 + (3 - 1) \times 4= 11 + 8 = 19
+	\]\\
+	Conv2：卷积核 \( 5 \times 5 \)，步长 1，填充 2：
+	\[
+	R_3 = R_2 + (5 - 1) \times 4 \times 2 = 19 + 32 = 51
+	\]\\
+	Pool2：池化核 \( 3 \times 3 \)，步长 2：
+	\[
+	R_4 = R_3 + (3 - 1) \times 4 \times 2 = 51 + 16 = 67
+	\]\\
+	Conv3：卷积核 \( 3 \times 3 \)，步长 1，填充 1：
+	\[
+	R_5 = R_4 + (3 - 1) \times 4 \times 2 \times 2 = 67 + 32 = 99
+	\]\\
+	Conv4：卷积核 \( 3 \times 3 \)，步长 1，填充 1：
+	\[
+	R_6 = R_5 + (3 - 1) \times 16 = 99 + 32 = 131
+	\]\\
+	Conv5：卷积核 \( 3 \times 3 \)，步长 1，填充 1：
+	\[
+	R_7 = R_6 + (3 - 1) \times 16 = 131 + 32 = 163
+	\]\\
+	Pool5：池化核 \( 3 \times 3 \)，步长 2：
+	\[
+	R_8 = R_7 + (3 - 1) \times 16 = 163 + 32 = 195
+	\]\\
+	全连接层感受野（根据老师课上讲的，将前一层feature map看作卷积核大小来进行计算）:
+	\[
+	R_{FC} = R_8 + (6 - 1) \times 32 = 195 + 5\times32 = 355
+	\]
+	后面连续跟着的全连接层的感受野保持355不变。
+	
+	\end{sol}
+
+\end{document}

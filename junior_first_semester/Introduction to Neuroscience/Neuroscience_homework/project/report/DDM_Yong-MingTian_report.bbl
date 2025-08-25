@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{fudenberg_testing_2020}
+D.~Fudenberg, W.~Newey, P.~Strack, and T.~Strzalecki, ``Testing the
+  drift-diffusion model,'' {\em Proceedings of the National Academy of
+  Sciences}, vol.~117, pp.~33141--33148, Dec. 2020.
+
+\bibitem{myers_practical_2022}
+C.~E. Myers, A.~Interian, and A.~A. Moustafa, ``A practical introduction to
+  using the drift diffusion model of decision-making in cognitive psychology,
+  neuroscience, and health sciences,'' {\em Frontiers in Psychology}, vol.~13,
+  p.~1039172, Dec. 2022.
+
+\bibitem{alvarez-zuzek_drift_2024}
+L.~G. Alvarez-Zuzek, J.~Grujic, and R.~Gallotti, ``Drift {Diffusion} {Model} to
+  understand (mis)information sharing dynamic in complex networks,'' Jan. 2024.
+\newblock arXiv:2401.17846 [physics].
+
+\bibitem{Britten4745}
+K.~Britten, M.~Shadlen, W.~Newsome, and J.~Movshon, ``The analysis of visual
+  motion: a comparison of neuronal and psychophysical performance,'' {\em
+  Journal of Neuroscience}, vol.~12, no.~12, pp.~4745--4765, 1992.
+
+\bibitem{ratcliff_diffusion_2008}
+R.~Ratcliff and G.~McKoon, ``The {Diffusion} {Decision} {Model}: {Theory} and
+  {Data} for {Two}-{Choice} {Decision} {Tasks},'' {\em Neural Computation},
+  vol.~20, pp.~873--922, Apr. 2008.
+
+\end{thebibliography}

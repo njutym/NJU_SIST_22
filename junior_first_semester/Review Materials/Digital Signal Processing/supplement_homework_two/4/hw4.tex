@@ -1,0 +1,141 @@
+\documentclass[tikz,a4paper,UTF8]{article}
+\usepackage{ctex}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\newmdtheoremenv{thm-box}{myThm}
+\newmdtheoremenv{prop-box}{Proposition}
+\newmdtheoremenv{def-box}{定义}
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 10pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2023年秋季}                    
+\chead{数字信号处理}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业四}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+ \vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\numberwithin{equation}{section}
+%\usepackage[thmmarks, amsmath, thref]{ntheorem}
+\newtheorem{myThm}{myThm}
+\newtheorem*{myDef}{Definition}
+\newtheorem*{mySol}{Solution}
+\newtheorem*{myProof}{Proof}
+\newtheorem*{myRemark}{备注}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\usepackage{multirow}
+
+%--
+
+%--
+\begin{document}
+
+\title{数字信号处理\\
+    作业四}
+\author{你的名字\, 你的学号}
+\maketitle
+%%%%%%%% 注意: 使用XeLatex 编译可能会报错，请使用 pdfLaTex 编译 %%%%%%%
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+    \begin{enumerate}
+        \item[(1)] 本次作业提交截止时间为~\textcolor{red}{\textbf{2023/12/18  23:59:59}}，截止时间后不再接收作业，本次作业记零分        
+        \item[(2)] 作业提交方式：使用此~\LaTeX~模板书写解答，只需提交编译生成的~pdf~文件，将~pdf~文件上传至\href{https://table.nju.edu.cn/dtable/forms/83126334-285c-4153-ba8a-cdc90d24358f/}{此~NJU Table}；
+        \item[(3)] pdf 文件命名方式：学号-姓名-作业号-v版本号, 例~ MG1900000-张三-1-v1；如果需要更改已提交的解答，请在截止时间之前提交新版本的解答，并将版本号加一；
+        \item[(4)] 未按照要求提交作业，或~pdf~命名方式不正确，将会被扣除部分作业分数。
+
+    \end{enumerate}
+\end{tcolorbox}
+
+
+\newpage
+\section{[60pts] 离散信号的傅里叶变换}
+\begin{enumerate}
+	\item 已知 $x[n]$ 经离散时间傅里叶变换后为 $X(e^{j\omega}) = \frac{\pi}{4} \delta(\omega - \frac{\pi}{4}) + \frac{\pi}{4} \delta(\omega + \frac{\pi}{4})$，求 $x[n]$;
+	\item 求周期为 4 的序列$ x[n]=\{\cdots, 14, 12, 6, 10, \cdots\} $的傅里叶级数的系数;
+	\item 计算下列有限长度序列的离散傅里叶变换（假设长度为 $N$）：
+	\begin{enumerate}
+		\item[(1)] $x[n]=\delta[n-n_0],\ 0<n_0<N$;
+		\item[(2)] $x[n]=a^n,\ 0\le n\le N-1$.
+	\end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[40pts] DTFT 和 DFS 的比较}
+\noindent 已知 $x[n]=\{4,2,1,2,3\}$
+\begin{itemize}
+	\item[(1)]计算 $X({e}^{{j}\omega})=\operatorname{DTFT}(x[n])$ 及 $X[k]=\operatorname{DFT}(x[n])$.
+	\item[(2)]将 $x[n]$ 的尾部补零, 得到 $x_0[n]=\{4,2,1,2,3,0,0,0\}$. 计算 $X_0({e}^{j \omega})=\operatorname{DTFT}(x_0[n])$ 及 $X_0[k]=\operatorname{DFT}(x_0[n])$.
+	\item[(3)]将 (1), (2) 的结果加以比较, 得出相应的结论.
+\end{itemize}
+
+
+
+
+
+\begin{framed}
+	\begin{spacing}{1.5}
+		\begin{itemize}
+			\item 你的答案。
+		\end{itemize}
+	\end{spacing}
+\end{framed}
+
+
+
+
+
+
+\end{document}

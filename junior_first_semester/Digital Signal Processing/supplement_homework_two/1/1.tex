@@ -1,0 +1,200 @@
+\documentclass[a4paper,UTF8]{article}
+\usepackage{ctex}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage{setspace}
+
+\newmdtheoremenv{thm-box}{myThm}
+\newmdtheoremenv{prop-box}{Proposition}
+\newmdtheoremenv{def-box}{定义}
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 10pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2023年秋季}                    
+\chead{数字信号处理}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业一}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+ \vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\numberwithin{equation}{section}
+%\usepackage[thmmarks, amsmath, thref]{ntheorem}
+\newtheorem{myThm}{myThm}
+\newtheorem*{myDef}{Definition}
+\newtheorem*{mySol}{Solution}
+\newtheorem*{myProof}{Proof}
+\newtheorem*{myRemark}{备注}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\usepackage{multirow}
+
+%--
+
+%--
+\begin{document}
+
+\title{数字信号处理\\
+    作业一}
+\author{你的名字\, 你的学号}
+\maketitle
+%%%%%%%% 注意: 使用XeLatex 编译可能会报错，请使用 pdfLaTex 编译 %%%%%%%
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+    \begin{enumerate}
+        \item[(1)] 本次作业提交截止时间为~\textcolor{red}{\textbf{2023/10/15  23:59:59}}，截止时间后不再接收作业，本次作业记零分；
+        \item[(2)] 作业提交方式：使用此~LaTex~模板书写解答，只需提交编译生成的~pdf~文件，将~pdf~文件上传至https://box.nju.edu.cn/u/d/dccd9cb71a344d52a9f1/；
+        \item[(3)] pdf 文件命名方式：学号-姓名-作业号-v版本号, 例~ MG1900000-张三-1-v1；如果需要更改已提交的解答，请在截止时间之前提交新版本的解答，并将版本号加一；
+        \item[(4)] 未按照要求提交作业，或~pdf~命名方式不正确，将会被扣除部分作业分数。
+
+    \end{enumerate}
+\end{tcolorbox}
+
+
+\newpage
+\section{[15pts] 信号的周期性}
+判断下列信号的周期性，并回答\textbf{是}、\textbf{否}，结果可能需要分类讨论。如果是周期信号，请给出其最小正周期。
+\begin{enumerate}[(1)]
+    \item $x(t)=\displaystyle\sin^22t+\cos\frac{\pi}{2} t$
+    \item $x(t)=\displaystyle\frac{\sin t + 2\sin2t + \sin3t + \sin 4t}{\cos t}$
+    \item $x(n)=\sin 3kn+\cos 4kn$, $k$为某一正实数。
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[10pts] 信号的模长}
+求以下信号的模长并画出示意图：
+\begin{equation*}
+    \begin{aligned}
+        x(t)=e^{j4t}+e^{j7t}
+    \end{aligned}
+\end{equation*}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[15pts] 系统的性质 }
+判断下列系统的线性/非线性、时变性/时不变性、可逆性/不可逆性和因果性/非因果性：
+\begin{enumerate}[(1)]
+    \item $y(t)=\displaystyle\frac{(x(t)+x^{\prime}(t))^2}{x(t)}$
+    \item $y(t) +y^{\prime}(t)=x(t)+x^{\prime}(t+1)-x^{\prime}(t-1)$
+    \item $y(n)=\displaystyle\sum^{\infty}_{k=1}\frac{(\ln x(n))^k}{k!}$
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[20pts] 连续信号的性质与变换}
+已知信号
+\begin{equation*}
+    \begin{aligned}
+        x(t)=\left\{
+        \begin{aligned}
+             & t+2,  &  & t\in[-2,-1] \\
+             & 1,    &  & t\in[-1,2]  \\
+             & -t+2, &  & t\in[1,\frac{3}{2}]   \\
+             & 0   , &  & \text{other}
+        \end{aligned}
+        \right.
+    \end{aligned}
+\end{equation*}
+\begin{enumerate}[(1)]
+    \item 求$x^{\prime}(t)-x^{\prime\prime}(t)$的表达式，并给出其大致图像。（冲激偶函数用$\delta^{\prime}(t)$表示，其图像为原点向y轴正负半轴分别延伸的箭头）
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+
+
+\newpage
+\section{[40pts] 卷积的计算 }
+计算下列各小题的结果：
+\begin{enumerate}[(1)]
+    \item 设
+          \begin{equation*}
+              \begin{aligned}
+                  x(t)=\left\{
+                  \begin{aligned}
+                       & 2t+1, &  & t\in[-1,1] \\
+                       & 0,    &  & other
+                  \end{aligned}
+                  \right.
+              \end{aligned}
+          \end{equation*}
+          试求$x(t)*x(t)$的结果。
+    \item 求$y(t)=[2e^{-2(t+1)}u(t-1)]*[3e^{-3t}u(t)]$的表达式。
+\end{enumerate}
+
+\begin{framed}
+    \begin{spacing}{1.5}
+        \begin{itemize}
+            \item 你的答案。
+        \end{itemize}
+    \end{spacing}
+\end{framed}
+\newpage
+\end{document}

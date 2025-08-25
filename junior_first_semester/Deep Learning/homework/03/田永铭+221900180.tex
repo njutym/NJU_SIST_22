@@ -1,0 +1,691 @@
+\documentclass{article}
+
+
+% 中文支持
+\usepackage[UTF8,heading = true]{ctex}
+
+
+% 页面布局
+\usepackage[a4paper]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\Lhead}[1]{\fancyhead[L]{#1}}
+\newcommand{\Chead}[1]{\fancyhead[C]{#1}}
+\newcommand{\Rhead}[1]{\fancyhead[R]{#1}}
+\newcommand{\Lfoot}[1]{\fancyfoot[L]{#1}}
+\newcommand{\Cfoot}[1]{\fancyfoot[C]{#1}}
+\newcommand{\Rfoot}[1]{\fancyfoot[R]{#1}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage{lastpage}
+%待填信息
+% -----------------------------------------------------
+\newcommand{\Course}{深度学习平台与应用}             		%      |
+\newcommand{\Assignment}{深度学习作业 3}		  %      | 
+\newcommand{\Name}{田永铭}				    	 %      |
+\newcommand{\ID}{221900180}				  	   %       |
+\newcommand{\Email}{tianym2022@smail.nju.edu.cn}  %    |
+% ------------------------------------------------------
+\fancyhead[L]{\Course}
+\fancyhead[C]{\Assignment}
+\fancyhead[R]{\ID \Name}
+\fancyfoot[C]{\thepage\ / \pageref*{LastPage}}	
+\setlength\headheight{36pt}
+% 自定义页面样式第一页只有页脚没有页眉
+\makeatletter
+\def\ps@onlyfoot{
+	\let\@oddhead\@empty
+	\let\@evenhead\@empty
+	\def\@oddfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+	\def\@evenfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+}
+\makeatother
+% maketitle
+\title{\Huge\Assignment}
+\author{\ID \Name \quad\href{mailto:tianym2022@smail.nju.edu.cn}{\color{magenta}\Email}}
+\date{\today}
+
+
+% 字体和颜色
+\usepackage{fontspec} 
+\fontsize{12pt}{\baselineskip}\selectfont
+\usepackage{xcolor}
+
+
+% 数学支持
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{esint}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% 左边大括号
+%\[
+%\left\{
+%\begin{aligned}
+%	& \text{approximate  covariance matrix of GP} \\
+%	& \text{only use subset}\\
+%	& \text{conditional independence assumption}
+%\end{aligned}
+%\right.
+%\]
+
+% 矩阵
+%\[
+%\begin{matrix}
+%	a & b \\
+%	c & d
+%\end{matrix}
+%\]
+
+% 行列式
+%\[
+%\begin{vmatrix}
+%	a & b \\
+%	c & d
+%\end{vmatrix}
+%\]
+
+
+% 标题格式
+\usepackage{titlesec}
+% 自定义 section 标题格式
+\renewcommand{\thesection}{\chinese{section}、}
+\titleformat{\section}
+{\normalfont\Large\bfseries\centering\color[rgb]{0,0,0.8}} % 设定字体和大小
+{\thesection}{0em} % 设定编号和标题之间的距离
+{}
+% 自定义 subsection 标题格式
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection} }
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color[rgb]{0.23,0.65,0.99}}
+{\thesubsection}{0em}
+{}
+% 自定义 subsubsection 标题格式
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection} }
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}
+{\thesubsubsection}{0em}
+{}
+% 设置 section 标题的间距
+\titlespacing*{\section}
+{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+% 设置 subsection 标题的间距
+\titlespacing*{\subsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% 设置 subsubsection 标题的间距
+\titlespacing*{\subsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+% 代码 
+% 如非默认，需使用[language=xxx,style=mystyle]
+\usepackage{listings}
+% language:  {[x86masm]Assembler}(汇编); python; C; C++; Java; SQL; Matlab; R; bash; make(makefile)
+\lstdefinestyle{mystyle}{
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny\color{magenta},
+	stepnumber=1,
+	numbersep=10pt,
+	backgroundcolor=\color[rgb]{0.95,0.95,0.95},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	rulecolor=\color{black},
+	tabsize=2,
+	captionpos=b,
+	breaklines=true,
+	breakatwhitespace=false,
+	title=\lstname,
+	keywordstyle=\color{blue},
+	commentstyle=\color[rgb]{0.0,0.5,0.0},
+	stringstyle=\color[rgb]{0.23,0.65,0.99}\itshape,
+	escapeinside={\%*}{*)},
+	morekeywords={}, % 添加更多关键字
+	literate=
+	{[}{{{\color{red}[}}}1
+	{]}{{{\color{red}]}}}1
+	{\{}{{{\color[rgb]{0.9,0,0.9}\{}}}1
+	{\}}{{{\color[rgb]{0.9,0,0.9}\}}}}1
+%	{0}{{{\color[rgb]{0.2,0.9,0.4}0}}}1
+%	{1}{{{\color[rgb]{0.2,0.9,0.4}1}}}1
+%	{2}{{{\color[rgb]{0.2,0.9,0.4}2}}}1
+%	{3}{{{\color[rgb]{0.2,0.9,0.4}3}}}1
+%	{4}{{{\color[rgb]{0.2,0.9,0.4}4}}}1
+%	{5}{{{\color[rgb]{0.2,0.9,0.4}5}}}1
+%	{6}{{{\color[rgb]{0.2,0.9,0.4}6}}}1
+%	{7}{{{\color[rgb]{0.2,0.9,0.4}7}}}1
+%	{8}{{{\color[rgb]{0.2,0.9,0.4}8}}}1
+%	{9}{{{\color[rgb]{0.2,0.9,0.4}9}}}1
+}
+\lstset{style=mystyle}
+
+
+% 图表
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font={small}}
+\usepackage{diagbox}
+\usepackage{array}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% 表1
+%\begin{table}[h!]
+%	\centering
+%	\caption{Performance comparison on mini-ImageNet and tiered-ImageNet datasets.}
+%	\begin{tabular}{@{}lcccccccc@{}}
+%		\toprule
+%		Dataset & Method & Backbone & 5-way 1-shot \\
+%		\midrule
+%		\multirow{9}{*}{\rotatebox[origin=c]{90}{mini-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.291 \\
+%		& MAML & Conv-4 & 49.704 \\
+%		& BOIL & Conv-4 & 48.456 \\
+%		& CAN & ResNet-12 & 59.493\\
+%		& LEO & ResNet-12 & 55.056 \\
+%		& SKD & ResNet-12 & 66.700  \\
+%		& R2D2 & ResNet-12 & 59.802 \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{68.727} \\
+%		\midrule
+%		\multirow{6}{*}{\rotatebox[origin=c]{90}{tiered-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.653 \\
+%		& Relation Networks & Conv-4 & 55.107  \\
+%		& MAML & Conv-4 & 51.038 \\
+%		& R2D2 & ResNet-12 & 64.916  \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{66.598} \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+% 表2
+%\begin{table}[t]
+%	\caption{Classification accuracies for naive Bayes and flexible
+%		Bayes on various data sets.}
+%	\label{sample-table}
+%	\vskip 0.15in
+%	\begin{center}
+%		\begin{small}
+%			\begin{sc}
+%				\begin{tabular}{lcccr}
+%					\toprule
+%					Data set & Naive & Flexible & Better? \\
+%					\midrule
+%					Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
+%					Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
+%					Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
+%					Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
+%					Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
+%					Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
+%					Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
+%					Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
+%					\bottomrule
+%				\end{tabular}
+%			\end{sc}
+%		\end{small}
+%	\end{center}
+%	\vskip -0.1in
+%\end{table}
+
+
+% 算法
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\begin{algorithm}[tb]
+%	\caption{Bubble Sort}
+%	\label{alg:example}
+%	\begin{algorithmic}
+	%		\STATE {\bfseries Input:} data $x_i$, size $m$
+	%		\REPEAT
+	%		\STATE Initialize $noChange = true$.
+	%		\FOR{$i=1$ {\bfseries to} $m-1$}
+	%		\IF{$x_i > x_{i+1}$}
+	%		\STATE Swap $x_i$ and $x_{i+1}$
+	%		\STATE $noChange = false$
+	%		\ENDIF
+	%		\ENDFOR
+	%		\UNTIL{$noChange$ is $true$}
+	%	\end{algorithmic}
+%\end{algorithm}
+
+% 超链接
+\usepackage{hyperref}
+
+
+% 论文参考文献
+% 需在正文结尾加入 \bibliography{references}，在同目录下创建references.bib
+\bibliographystyle{plain}
+
+
+% 表情
+% https://ctan.math.washington.edu/tex-archive/graphics/pgf/contrib/tikzsymbols/tikzsymbols.pdf
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+% 背景颜色：\colorbox{yellow}{...}
+% 3D版本： 在前面加上d,比如：dSmiley
+
+% 常用
+% 笑脸：\Smiley[⟨scale⟩][⟨color⟩]
+% 哭脸：\Sadey[⟨scale⟩][⟨color⟩]
+% 生气脸： \Annoey[⟨scale⟩][⟨color⟩]
+% 大笑： \Laughey[⟨scale⟩][⟨color⟩][⟨mouth color⟩]
+% 挤眉弄眼： \Winkey[⟨scale⟩][⟨color⟩]
+% 去世： \Xey[⟨scale⟩][⟨color⟩]
+% 升天： \wInnocey[⟨scale⟩]
+% 口吐芬芳： \Vomey[⟨scale⟩][⟨color⟩][⟨vomit color⟩]
+% 猫： \Cat[⟨scale⟩]
+% 炸弹： \Ninja[⟨scale⟩][⟨color⟩][⟨headband color⟩][⟨eye color⟩]
+% 困： \Sleepey[⟨scale⟩][⟨color⟩][⟨cap color⟩][⟨star color⟩]
+% 口罩：\Maskey[⟨scale⟩][⟨color⟩][⟨mask color⟩]
+% 渐变弧度脸(-2到2)： \Changey[⟨scale⟩][⟨color⟩]{⟨mood⟩}
+% 树（春夏秋冬）： \Springtree[⟨scale⟩]
+% 咖啡： \Coffeecup[⟨scale⟩]
+
+
+
+% 简化命令
+\newcommand{\hs}[1]{\hspace{{#1}em}} %空格
+\newcommand{\qd}{\quad} %空格
+\newcommand{\qqd}{\qquad} %空格
+% 链接
+\newcommand{\myhref}[2]{\href{#1}{{\color[rgb]{0.9,0,0.9}{#2}}}}
+\newcommand{\myred}[1]{{\color{red}{#1}}} %红色
+% 图 args：figures下图片路径，大小，图片显示名
+\newcommand{\myfig}[3]{
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#2\linewidth]{figures/#1}
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+% 左右分栏插入图片
+% args: 左图文件名，左图宽度，左图标题，右图文件名，右图宽度，右图标题
+\newcommand{\mytwocolumnfig}[6]{
+	\begin{figure}[h!]
+		\centering
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#2\linewidth]{figures/#1}
+			\caption{#3}
+			\label{fig:#1}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#5\linewidth]{figures/#4}
+			\caption{#6}
+			\label{fig:#4}
+		\end{minipage}
+	\end{figure}
+}
+
+
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+
+\newtheorem{prob}{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+
+
+\begin{document}
+	\maketitle
+	
+	\section{视频理解}
+	\begin{prob}
+		\textbf{分别用简短的语言描述一下单帧 CNN 模型，Early Fusion，Late Fusion，3D CNN的做法以及区别。}
+	\end{prob}
+	\begin{sol}
+		{\color{red} 做法：}
+		
+		\textbf{单帧 CNN 模型}：  
+		训练普通的 2D CNN 独立对视频单一图象帧进行分类。
+		
+		\textbf{Early Fusion}： 第一个2D卷积处理所有时间信息，网络的其他部分是常规的2D卷积。
+		
+		\textbf{Late Fusion}： 将每帧的CNN特征并联（或者池化）并送入 MLP。		
+
+		\textbf{3D CNN}：  扩展传统的2D卷积神经网络，加入时序维度T，使用三维卷积核来处理时序数据或视频帧，能够捕捉时空信息的变化。
+		
+		{\color{red} 区别：}  
+
+			\textbf{单帧 CNN} 处理的是静态图像，是最一般，最难捕捉动态信息的方法。而\textbf{3D CNN}由于用了三维卷积，是最适合能够处理时序或视频数据，能捕捉动态信息的。
+			
+			\textbf{其它两种方法}介于前两者之间，都是用``融合"的思想，但是\textbf{Early Fusion} 是将不同模态的原始数据融合在一起输入网络，而 \textbf{Late Fusion} 则是在每个模态单独处理后再进行融合。\\
+	\end{sol}
+	
+	
+	\begin{prob}
+		\textbf{如何使用RNN（如LSTM）建模视频中的长时间依赖？相比于3D CNN，这种方法有何特点？}
+	\end{prob}
+	
+	\begin{sol}
+	{\color{red} 使用 LSTM 进行视频长时间依赖建模:}
+	  
+	通常将视频切分成连续的帧序列，每一帧通过卷积神经网络（如 ResNet）提取特征，之后将这些特征作为 LSTM 网络的输入，由LSTM处理局部特征。基本流程见图~\ref{fig:1}。
+	
+	而具体用LSTM建模的时候，会考虑更多问题，比如有时为了节省显存，不训练 CNN预训练并将其用作特征提取器；又如使用多层 RNN来综合局部时间结构和全局时间结构等等。
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\linewidth]{Figures/1}
+	\caption{LSTM建模长时间序列}
+	\label{fig:1}
+\end{figure}
+
+	\myred{相比3D CNN的特点:}
+	
+	\begin{itemize}
+		\item \textbf{建模方式}：  
+		\textbf{LSTM} 逐帧处理视频中的时序信息，通过内部的记忆单元来捕捉长时间的依赖关系，主要解决的是时序信息，空间信息还是由原本的CNN来完成。而 \textbf{3D CNN} 通过三维卷积直接对视频的时空数据一起处理，能够同时在空间和时间维度上进行特征提取。
+		
+		\item \textbf{捕捉时间依赖的能力}：  
+		\textbf{LSTM} 由于由记忆单元等等，相比于\textbf{3D CNN}更擅长建模更长时间依赖，能够处理视频中跨多个时间步的长期信息（如情节变化、长时间动作）。
+		
+		\item \textbf{灵活度}：
+		\textbf{LSTM} 可处理变长输入（任意帧数视频）,而\textbf{3D CNN}通常需要固定输入长度（帧数固定）。
+		
+		\item \textbf{使用场景}：
+		\textbf{LSTM} 相比 \textbf{3D CNN}更适合处理长序列。
+		
+		\item \textbf{计算效率}：  
+		\textbf{LSTM} 在处理长时间序列时计算成本较高，尤其是在长视频中，训练和推理可能变得非常耗时（要计算很多``门"）。而 \textbf{3D CNN} 可以通过多维卷积核并行处理时间帧，通常在处理大规模视频数据时具有更高的计算效率。但是它参数量通常比较大，需要更大的计算资源和内存。\\
+	\end{itemize}
+	
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{结合课件中Spatio-Temporal Self-Attention (Nonlocal Block)部分的介绍，请补充下面的代码。}
+		\begin{lstlisting}[language=python,style=mystyle]
+import torch
+import torch.nn as nn
+class NonLocalBlock(nn.Module):
+	def __init__(self, in_channels):
+		super(NonLocalBlock, self).__init__()
+		self.in_channels = in_channels
+		self.inter_channels = in_channels // 2  # 缩减通道数，节约计算
+		# 1x1x1 卷积层用于生成 Query, Key, Value
+		self.query_conv = nn.Conv3d(in_channels, self.inter_channels, 
+		kernel_size=1)
+		self.key_conv = nn.Conv3d(in_channels, self.inter_channels, 
+		kernel_size=1)
+		self.value_conv = nn.Conv3d(in_channels, self.inter_channels, 
+		kernel_size=1)
+		# 最终的输出通道映射回原始的 in_channels
+		self.out_conv = nn.Conv3d(self.inter_channels, in_channels, 
+		kernel_size=1)
+		# 用于归一化的 softmax
+		self.softmax = nn.Softmax(dim=-1)
+	def forward(self, x):
+		# 输入维度: (N, C, T, H, W)
+		batch_size, C, T, H, W = x.size()
+		# 生成 Query, Key, Value
+		query = self.query_conv(x).view(batch_size, self.inter_channels, -1)  # (N, C', T*H*W)
+		key = self.key_conv(x).view(batch_size, self.inter_channels, -1)  #  (N, C', T*H*W)
+		value = self.value_conv(x).view(batch_size, self.inter_channels, -1) # (N, C', T*H*W)
+		# 请在下面补充完整 Spatio-Temporal Self-Attention 计算过程
+		return out
+# 测试模块
+if __name__ == "__main__":
+# 输入示例: Batch = 2, Channels = 64, Time = 8, Height = 32, Width = 32
+	x = torch.rand(2, 64, 8, 32, 32)
+	nonlocal_block = NonLocalBlock(in_channels=64)
+	out = nonlocal_block(x)
+	print("输入维度:", x.shape)
+	print("输出维度:", out.shape)
+		\end{lstlisting}
+	\end{prob}
+	
+	\newpage
+	
+	\begin{sol}
+		补充部分的代码如下，主要采用的操作是变换形状和矩阵相乘。
+\begin{lstlisting}[language=python,style=mystyle]
+# 计算 QK^T
+attn = torch.bmm(query.permute(0, 2, 1), key)  # (N, T*H*W, T*H*W)
+# 归一化
+attn = self.softmax(attn)  # (N, T*H*W, T*H*W)
+# 计算加权值
+out = torch.bmm(attn, value.permute(0, 2, 1))  # (N, T*H*W, C')
+# 恢复原始维度
+out = out.view(batch_size, self.inter_channels, T, H, W)
+# 映射回原始通道数
+out = self.out_conv(out)  # (N, C, T, H, W)
+out = out + x  # 残差连接 
+return out
+\end{lstlisting}
+
+生成结果符合预期,输出如图~\ref{fig:2}，函数作用前后维度不变。
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\linewidth]{Figures/2}
+	\caption{输入输出维度}
+	\label{fig:2}
+\end{figure}
+
+	\end{sol}
+		
+	\section{风格迁移与可视化}
+		
+	\begin{prob}
+		\textbf{ 在风格迁移中，Gram矩阵的作用是什么？}
+	\end{prob}
+	
+	\begin{sol}
+	Gram矩阵是图像的 HW 个向量之间两两的内积所组成的矩阵,反映了特征图之间的全局统计相关性，这种相关性与图像的纹理和风格密切相关,所以用于捕捉图像的“风格”信息。具体做法如下：
+	
+	\textbf{1. 风格表示：}
+	
+	图像的风格主要由颜色、纹理、形状等元素的统计特征决定。Gram矩阵通过计算图像中各个特征图（feature maps）之间的相关性来表示这种风格特征。
+	
+	设图像经过卷积神经网络（CNN）处理后得到一系列特征图（如在某层的输出），Gram矩阵就是这些特征图的内积矩阵，用于捕捉特征图之间的空间相关性。
+	
+	\textbf{2. 计算方法：}
+	
+	假设某一层的特征图大小为 \(C \times H \times W\)，其中 \(C\) 是特征图的数量（通道数），\(H\) 和 \(W\) 是特征图的高度和宽度。
+	
+	对于每个特征图 \(f_i\)（在二维图像中，通常是特征图的矩阵），Gram矩阵 \(G\) 的计算公式为：
+	
+	\[
+	G_{ij} = \sum_{h=1}^{H} \sum_{w=1}^{W} f_i(h, w) f_j(h, w)
+	\]
+	
+	即，Gram矩阵的每一个元素表示特征图 \(i\) 和特征图 \(j\) 的相关性。
+	
+	\textbf{3. 风格迁移：}
+	
+	在风格迁移的过程中，我们希望保持目标图像的内容结构，同时使其风格接近风格图像。因此，风格损失（style loss）是通过计算生成图像和风格图像的Gram矩阵之间的差异来度量风格相似性的。
+	
+	损失函数的一部分通常是：
+	
+	\[
+	\text{Style Loss} = \sum_{l} \lambda_l \left( \| G_l^{\text{target}} - G_l^{\text{style}} \|^2 \right)
+	\]
+	
+	其中，\(G_l^{\text{target}}\) 和 \(G_l^{\text{style}}\) 分别是目标图像和风格图像在某层的Gram矩阵，\(l\) 表示不同层的贡献，\(\lambda_l\) 是该层的权重。
+	
+	通过这种方式，Gram矩阵使得风格迁移不仅关注图像的局部细节，还能够捕捉图像全局的风格特征。
+	\end{sol}
+	
+	
+	\begin{prob}
+		\textbf{ 风格迁移和快速风格迁移的区别？}
+	\end{prob}
+	
+	\begin{sol}
+		思想上，从\textbf{风格迁移}到\textbf{快速风格迁移}，有点类似``不再处理单一像素，而是从特征出发"。具体来说，\textbf{风格迁移}需要通过 VGG 进行多次向前/向后传播，速度很慢。\textbf{快速风格迁移}使用前馈网络进行风格迁移，使用预训练的 CNN 计算与以前相同的损失,训练后使用单次前向传播对图像进行风格迁移，速度快。
+		
+		通过表\ref{table}可以直观看出区别：
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|c|c|c|}
+				\hline
+				\textbf{特性} & \textbf{风格迁移（Style Transfer）} & \textbf{快速风格迁移（Fast Style Transfer）} \\
+				\hline
+				\textbf{方法} & 基于优化过程，通过迭代更新生成图像 & 使用训练好的神经网络进行前馈计算 \\
+				\hline
+				\textbf{计算时间} & 计算时间较长，通常需要几百到几千次迭代 & 生成速度快，通常可以实时生成图像 \\
+				\hline
+				\textbf{生成速度} & 慢 & 快（接近实时） \\
+				\hline
+				\textbf{图像质量} & 较高，细节丰富，风格表现较好 & 可能有所牺牲，但仍能呈现较好的风格 \\
+				\hline
+				\textbf{实现方式} & 需要每次进行优化和计算损失 & 通过训练一个生成网络，一次训练后即可使用 \\
+				\hline
+				\textbf{计算开销} & 高，需进行多次前向传播和反向传播 & 低，一次前向传播即可生成图像 \\
+				\hline
+			\end{tabular}
+			\caption{风格迁移与快速风格迁移的比较}
+			\label{table}
+		\end{table}
+	\end{sol}
+	
+
+	\begin{prob}
+		\textbf{显著性图是怎么计算的（Saliency Map），它的用途是什么？}
+	\end{prob}
+	
+	\begin{sol}
+	\myred{计算方法：}
+	通过梯度反向传播找到重要的像素。首先进行前向传播，然后计算每个类预测值相对于图像像素的梯度，在 RGB 通道上取绝对值的最大值，具体计算方法如下：
+	
+	\begin{itemize}
+		\item \textbf{Grad-CAM（梯度加权类激活映射）}: 通过计算类别分数对最后卷积层输出的梯度，生成显著性图：
+		\[
+		\text{Grad-CAM}(x) = \text{ReLU}\left( \sum_{k} \alpha_k A^k \right)
+		\]
+		其中，\( A^k \) 为卷积层特征图，\(\alpha_k\) 为加权系数。
+		
+		\item \textbf{CAM（类激活映射）}: 直接加权卷积层特征图的每个通道，生成显著性图，适用于全局平均池化后的网络结构。
+		
+		\item \textbf{基本梯度显著性图}: 通过类别分数对图像像素的梯度计算显著性图：
+		\[
+		S(x) = \left| \frac{\partial f(x)}{\partial x} \right|
+		\]
+		其中，\( f(x) \) 是网络的输出。
+	\end{itemize}
+	\myred{用途：}
+	\begin{itemize}
+		\item \textbf{可以用于无监督分割}：可以根据显著性划分区域。
+		\item \textbf{可以用于发现数据偏差}:比如发现二哈被分类为狼的原因是因为数据图中有雪。
+		\item \textbf{模型可解释性}: 帮助理解模型做出预测的依据。
+		\item \textbf{特征可视化}: 可视化模型在不同层次学习的特征。
+		\item \textbf{数据增强}: 通过关注显著性区域进行数据增强，提高模型性能。
+		\item \textbf{图像编辑}: 用于图像修复、生成等任务，聚焦重要区域进行操作。\\
+	\end{itemize}
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{请补充完整下面显著性可视化的代码。}
+		\begin{lstlisting}[language=python,style=mystyle]
+import torch
+import torchvision
+import torchvision.transforms as T
+import numpy as np
+import matplotlib.pyplot as plt
+import requests
+from PIL import Image
+
+def download(url,fname):
+	response = requests.get(url)
+	with open(fname,"wb") as f:
+	f.write(response.content)
+	
+def preprocess(image, size=224):
+	transform = T.Compose([
+	T.Resize((size,size)),
+	T.ToTensor(),
+	T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+	T.Lambda(lambda x: x[None]),
+	])
+	return transform(image)
+	
+def deprocess(image):
+	transform = T.Compose([
+	T.Lambda(lambda x: x[0]),
+	T.Normalize(mean=[0, 0, 0], std=[4.3668, 4.4643, 4.4444]),
+	T.Normalize(mean=[-0.485, -0.456, -0.406], std=[1, 1, 1]),
+	T.ToPILImage(),
+	])
+	return transform(image)
+	
+def show_img(PIL_IMG):
+	plt.imshow(np.asarray(PIL_IMG))
+	
+if __name__ =='__main__':
+	model = torchvision.models.vgg19(pretrained=True)
+	for param in model.parameters():
+	param.requires_grad = False
+
+	download("https://bkimg.cdn.bcebos.com/pic/3bf33a87e950352ac65cae81db13ecf2b21192131da3?x-bce-process=image/format,f_auto/quality,Q_70/resize,m_lfit,limit_1,w_536","input.jpg")
+	img = Image.open('input.jpg') # 这里可以替换为自己的图片 
+	X = preprocess(img) # X.shape: 1, 3, 224, 224
+	model.eval()
+	X.requires_grad_()
+	output = model(X) # 1, 1000 
+	print(output.shape)
+	score_max_index = output.argmax()
+	score_max = output[0, score_max_index]
+
+#####
+# 需要实现课件上显著性可视化部分，具体的步骤为：
+# a) 通过反向传播获取梯度
+# b) 在RGB通道上取梯度绝对值的最大值
+# 请在下面补充代码：
+#####
+
+	plt.imshow(saliency[0], cmap=plt.cm.hot)
+	plt.axis('off')
+	plt.savefig("output.png")
+		\end{lstlisting}
+	\end{prob}
+	
+	\begin{sol}
+	补充部分代码如下：
+	\begin{lstlisting}[language=python,style=mystyle]
+# a) 通过反向传播获取梯度
+score_max.backward()  # 对最高得分类别反向传播
+gradients = X.grad.data  # 获取输入的梯度
+
+# b) 在 RGB 通道上取梯度绝对值的最大值
+saliency, _ = torch.max(gradients.abs(), dim=1)  # 取每个像素点在 RGB 通道的最大绝对值
+saliency = saliency.squeeze().cpu().numpy()  # 转为 numpy 格式，去掉 batch 维
+	\end{lstlisting}
+	生成结果如图~\ref{fig:3}。有点原图奶龙的亚子力。\Winkey[2][yellow]
+	
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Figures/3}
+	\caption{显著性图}
+	\label{fig:3}
+\end{figure}
+	
+	\end{sol}
+	
+
+\end{document}

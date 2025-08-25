@@ -1,0 +1,611 @@
+\documentclass{article}
+
+
+% 中文支持
+\usepackage[UTF8,heading = true]{ctex}
+
+
+% 页面布局
+\usepackage[a4paper]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\Lhead}[1]{\fancyhead[L]{#1}}
+\newcommand{\Chead}[1]{\fancyhead[C]{#1}}
+\newcommand{\Rhead}[1]{\fancyhead[R]{#1}}
+\newcommand{\Lfoot}[1]{\fancyfoot[L]{#1}}
+\newcommand{\Cfoot}[1]{\fancyfoot[C]{#1}}
+\newcommand{\Rfoot}[1]{\fancyfoot[R]{#1}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage{lastpage}
+%待填信息
+% -----------------------------------------------------
+\newcommand{\Course}{深度学习平台与应用}             		%      |
+\newcommand{\Assignment}{深度学习作业 5}		  %      | 
+\newcommand{\Name}{田永铭}				    	 %      |
+\newcommand{\ID}{221900180}				  	   %       |
+\newcommand{\Email}{tianym2022@smail.nju.edu.cn}  %    |
+% ------------------------------------------------------
+\fancyhead[L]{\Course}
+\fancyhead[C]{\Assignment}
+\fancyhead[R]{\ID \Name}
+\fancyfoot[C]{\thepage\ / \pageref*{LastPage}}	
+\setlength\headheight{36pt}
+% 自定义页面样式第一页只有页脚没有页眉
+\makeatletter
+\def\ps@onlyfoot{
+	\let\@oddhead\@empty
+	\let\@evenhead\@empty
+	\def\@oddfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+	\def\@evenfoot{\hfil\thepage\ / \pageref*{LastPage}\hfil}
+}
+\makeatother
+% maketitle
+\title{\Huge\Assignment}
+\author{\ID \Name \quad\href{mailto:tianym2022@smail.nju.edu.cn}{\color{magenta}\Email}}
+\date{\today}
+
+
+% 字体和颜色
+\usepackage{fontspec} 
+\fontsize{12pt}{\baselineskip}\selectfont
+\usepackage{xcolor}
+
+
+% 数学支持
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{esint}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% 左边大括号
+%\[
+%\left\{
+%\begin{aligned}
+%	& \text{approximate  covariance matrix of GP} \\
+%	& \text{only use subset}\\
+%	& \text{conditional independence assumption}
+%\end{aligned}
+%\right.
+%\]
+
+% 矩阵
+%\[
+%\begin{matrix}
+%	a & b \\
+%	c & d
+%\end{matrix}
+%\]
+
+% 行列式
+%\[
+%\begin{vmatrix}
+%	a & b \\
+%	c & d
+%\end{vmatrix}
+%\]
+
+
+% 标题格式
+\usepackage{titlesec}
+% 自定义 section 标题格式
+\renewcommand{\thesection}{\chinese{section}、}
+\titleformat{\section}
+{\normalfont\Large\bfseries\centering\color[rgb]{0,0,0.8}} % 设定字体和大小
+{\thesection}{0em} % 设定编号和标题之间的距离
+{}
+% 自定义 subsection 标题格式
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection} }
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color[rgb]{0.23,0.65,0.99}}
+{\thesubsection}{0em}
+{}
+% 自定义 subsubsection 标题格式
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection} }
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}
+{\thesubsubsection}{0em}
+{}
+% 设置 section 标题的间距
+\titlespacing*{\section}
+{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+% 设置 subsection 标题的间距
+\titlespacing*{\subsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% 设置 subsubsection 标题的间距
+\titlespacing*{\subsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+% 代码 
+% 如非默认，需使用[language=xxx,style=mystyle]
+\usepackage{listings}
+% language:  {[x86masm]Assembler}(汇编); python; C; C++; Java; SQL; Matlab; R; bash; make(makefile)
+\lstdefinestyle{mystyle}{
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny\color{magenta},
+	stepnumber=1,
+	numbersep=10pt,
+	backgroundcolor=\color[rgb]{0.95,0.95,0.95},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	rulecolor=\color{black},
+	tabsize=2,
+	captionpos=b,
+	breaklines=true,
+	breakatwhitespace=false,
+	title=\lstname,
+	keywordstyle=\color{blue},
+	commentstyle=\color[rgb]{0.0,0.5,0.0},
+	stringstyle=\color[rgb]{0.23,0.65,0.99}\itshape,
+	escapeinside={\%*}{*)},
+	morekeywords={}, % 添加更多关键字
+	literate=
+	{[}{{{\color{red}[}}}1
+	{]}{{{\color{red}]}}}1
+	{\{}{{{\color[rgb]{0.9,0,0.9}\{}}}1
+	{\}}{{{\color[rgb]{0.9,0,0.9}\}}}}1
+%	{0}{{{\color[rgb]{0.2,0.9,0.4}0}}}1
+%	{1}{{{\color[rgb]{0.2,0.9,0.4}1}}}1
+%	{2}{{{\color[rgb]{0.2,0.9,0.4}2}}}1
+%	{3}{{{\color[rgb]{0.2,0.9,0.4}3}}}1
+%	{4}{{{\color[rgb]{0.2,0.9,0.4}4}}}1
+%	{5}{{{\color[rgb]{0.2,0.9,0.4}5}}}1
+%	{6}{{{\color[rgb]{0.2,0.9,0.4}6}}}1
+%	{7}{{{\color[rgb]{0.2,0.9,0.4}7}}}1
+%	{8}{{{\color[rgb]{0.2,0.9,0.4}8}}}1
+%	{9}{{{\color[rgb]{0.2,0.9,0.4}9}}}1
+}
+\lstset{style=mystyle}
+
+
+% 图表
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font={small}}
+\usepackage{diagbox}
+\usepackage{array}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% 表1
+%\begin{table}[h!]
+%	\centering
+%	\caption{Performance comparison on mini-ImageNet and tiered-ImageNet datasets.}
+%	\begin{tabular}{@{}lcccccccc@{}}
+%		\toprule
+%		Dataset & Method & Backbone & 5-way 1-shot \\
+%		\midrule
+%		\multirow{9}{*}{\rotatebox[origin=c]{90}{mini-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.291 \\
+%		& MAML & Conv-4 & 49.704 \\
+%		& BOIL & Conv-4 & 48.456 \\
+%		& CAN & ResNet-12 & 59.493\\
+%		& LEO & ResNet-12 & 55.056 \\
+%		& SKD & ResNet-12 & 66.700  \\
+%		& R2D2 & ResNet-12 & 59.802 \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{68.727} \\
+%		\midrule
+%		\multirow{6}{*}{\rotatebox[origin=c]{90}{tiered-ImageNet}} 
+%		& ProtoNet & Conv-4 & 46.653 \\
+%		& Relation Networks & Conv-4 & 55.107  \\
+%		& MAML & Conv-4 & 51.038 \\
+%		& R2D2 & ResNet-12 & 64.916  \\
+%		& DiffKendall (Ours) & ResNet-12 & \textbf{66.598} \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+% 表2
+%\begin{table}[t]
+%	\caption{Classification accuracies for naive Bayes and flexible
+%		Bayes on various data sets.}
+%	\label{sample-table}
+%	\vskip 0.15in
+%	\begin{center}
+%		\begin{small}
+%			\begin{sc}
+%				\begin{tabular}{lcccr}
+%					\toprule
+%					Data set & Naive & Flexible & Better? \\
+%					\midrule
+%					Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
+%					Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
+%					Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
+%					Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
+%					Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
+%					Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
+%					Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
+%					Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
+%					\bottomrule
+%				\end{tabular}
+%			\end{sc}
+%		\end{small}
+%	\end{center}
+%	\vskip -0.1in
+%\end{table}
+
+
+% 算法
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\begin{algorithm}[tb]
+%	\caption{Bubble Sort}
+%	\label{alg:example}
+%	\begin{algorithmic}
+	%		\STATE {\bfseries Input:} data $x_i$, size $m$
+	%		\REPEAT
+	%		\STATE Initialize $noChange = true$.
+	%		\FOR{$i=1$ {\bfseries to} $m-1$}
+	%		\IF{$x_i > x_{i+1}$}
+	%		\STATE Swap $x_i$ and $x_{i+1}$
+	%		\STATE $noChange = false$
+	%		\ENDIF
+	%		\ENDFOR
+	%		\UNTIL{$noChange$ is $true$}
+	%	\end{algorithmic}
+%\end{algorithm}
+
+% 超链接
+\usepackage{hyperref}
+
+
+% 论文参考文献
+% 需在正文结尾加入 \bibliography{references}，在同目录下创建references.bib
+\bibliographystyle{plain}
+
+
+% 表情
+% https://ctan.math.washington.edu/tex-archive/graphics/pgf/contrib/tikzsymbols/tikzsymbols.pdf
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+% 背景颜色：\colorbox{yellow}{...}
+% 3D版本： 在前面加上d,比如：dSmiley
+
+% 常用
+% 笑脸：\Smiley[⟨scale⟩][⟨color⟩]
+% 哭脸：\Sadey[⟨scale⟩][⟨color⟩]
+% 生气脸： \Annoey[⟨scale⟩][⟨color⟩]
+% 大笑： \Laughey[⟨scale⟩][⟨color⟩][⟨mouth color⟩]
+% 挤眉弄眼： \Winkey[⟨scale⟩][⟨color⟩]
+% 去世： \Xey[⟨scale⟩][⟨color⟩]
+% 升天： \wInnocey[⟨scale⟩]
+% 口吐芬芳： \Vomey[⟨scale⟩][⟨color⟩][⟨vomit color⟩]
+% 猫： \Cat[⟨scale⟩]
+% 炸弹： \Ninja[⟨scale⟩][⟨color⟩][⟨headband color⟩][⟨eye color⟩]
+% 困： \Sleepey[⟨scale⟩][⟨color⟩][⟨cap color⟩][⟨star color⟩]
+% 口罩：\Maskey[⟨scale⟩][⟨color⟩][⟨mask color⟩]
+% 渐变弧度脸(-2到2)： \Changey[⟨scale⟩][⟨color⟩]{⟨mood⟩}
+% 树（春夏秋冬）： \Springtree[⟨scale⟩]
+% 咖啡： \Coffeecup[⟨scale⟩]
+
+
+
+% 简化命令
+\newcommand{\hs}[1]{\hspace{{#1}em}} %空格
+\newcommand{\qd}{\quad} %空格
+\newcommand{\qqd}{\qquad} %空格
+% 链接
+\newcommand{\myhref}[2]{\href{#1}{{\color[rgb]{0.9,0,0.9}{#2}}}}
+\newcommand{\myred}[1]{{\color{red}{#1}}} %红色
+% 图 args：figures下图片路径，大小，图片显示名
+\newcommand{\myfig}[3]{
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#2\linewidth]{figures/#1}
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+% 左右分栏插入图片
+% args: 左图文件名，左图宽度，左图标题，右图文件名，右图宽度，右图标题
+\newcommand{\mytwocolumnfig}[6]{
+	\begin{figure}[h!]
+		\centering
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#2\linewidth]{figures/#1}
+			\caption{#3}
+			\label{fig:#1}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[h!]{0.45\linewidth}
+			\centering
+			\includegraphics[width=#5\linewidth]{figures/#4}
+			\caption{#6}
+			\label{fig:#4}
+		\end{minipage}
+	\end{figure}
+}
+
+
+\newtheoremstyle{Problem}
+{}
+{}
+{}
+{}
+{\bfseries}
+{}
+{ }
+{Problem\thmnumber{ #2}\thmname{ #1}\thmnote{ (#3)} }
+\theoremstyle{Problem}
+
+\newtheorem{prob}{}
+\newtheoremstyle{Solution}
+{}
+{}
+{}
+{}
+{\bfseries}
+{:}
+{ }
+{\thmname{#1}}
+\makeatletter
+\makeatother
+\theoremstyle{Solution}
+\newtheorem*{sol}{Solution}
+
+
+\begin{document}
+	\maketitle
+	
+	\begin{prob}
+		\textbf{列举几种常见的激活函数，并简要说明它们的作用。}
+	\end{prob}
+	
+	\begin{sol}
+	解：
+\begin{enumerate}
+	\item \textbf{Sigmoid 函数} \\
+	\textit{公式：} \( \sigma(x) = \frac{1}{1 + e^{-x}} \) \\
+	\textit{作用：} 将输入值映射到 0 和 1 之间。适用于二分类问题的输出层，因为其输出可解释为概率。但在深层网络中容易导致梯度消失问题，因此不常用于隐藏层。
+	
+	\item \textbf{Tanh（双曲正切）函数} \\
+	\textit{公式：} \( \tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}} \) \\
+	\textit{作用：} 输出值在 -1 和 1 之间，比 Sigmoid 有更好的性能，因为其输出是零中心的，有助于加速梯度下降。与 Sigmoid 类似，Tanh 也存在梯度消失的问题。
+	
+	\item \textbf{ReLU（Rectified Linear Unit）} \\
+	\textit{公式：} \( \text{ReLU}(x) = \max(0, x) \) \\
+	\textit{作用：} 当输入大于 0 时，输出为输入值；否则输出为 0。ReLU 是目前最常用的激活函数之一，能够有效缓解梯度消失问题，且计算简单。其缺点是会出现“死神经元”问题，导致部分神经元永远不会激活。
+	
+	\item \textbf{Leaky ReLU} \\
+	\textit{公式：} \( \text{Leaky ReLU}(x) = \max(\alpha x, x) \)（其中 \(\alpha\) 是一个小常数） \\
+	\textit{作用：} Leaky ReLU 是对 ReLU 的改进，允许输入小于 0 时输出为一个很小的负数，避免了死神经元问题。通常，\(\alpha\) 取值较小，如 0.01。
+	
+	\item \textbf{GELU (Gaussian Error Linear Unit)} \\
+	\textit{公式：} \( \text{GELU}(x) = 0.5 x \left( 1 + \tanh\left( \sqrt{\frac{2}{\pi}} (x + 0.044715 x^3) \right) \right) \) \\
+	\textit{作用：} GELU 是一种平滑的非线性激活函数，常用于 Transformer 等模型中。它结合了高斯误差函数和线性激活的优点，使得网络在训练时能够获得更好的梯度流，避免 ReLU 的死神经元问题，并具有类似于 ReLU 的高效性。
+\end{enumerate}
+	\end{sol}
+	
+	\newpage
+	
+	\begin{prob}
+		\textbf{什么是反向传播？它的核心思想是什么？}
+	\end{prob}
+	
+	\begin{sol}
+		解:\\
+		\textbf{反向传播（Backpropagation） :}\\是一种用于训练神经网络的算法，它通过链式法则有效地计算损失函数关于网络中每个参数的梯度，从而实现模型的优化。反向传播通过梯度下降算法来更新神经网络中的权重和偏置，使得损失函数的值逐渐减小，从而提高网络的性能。\\
+		\textbf{核心思想：}\\
+		反向传播的核心思想是利用\textbf{链式法则}，从输出层开始，\textbf{逐层将误差反向传播到隐藏层和输入层}，计算每个参数对损失函数的\textbf{偏导数}，并利用这些梯度更新参数。
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{Numpy 实现反向传播梯度。}
+		\begin{lstlisting}[language=python,style=mystyle]
+import numpy as np
+
+# 设置随机种子，方便复现
+np.random.seed(42)
+
+# 初始化参数
+W1 = np.random.randn(2, 2)  # 输入层到隐藏层的权重
+b1 = np.random.randn(2)  # 隐藏层的偏置
+W2 = np.random.randn(2)  # 隐藏层到输出层的权重
+b2 = np.random.randn()  # 输出层的偏置
+
+# 输入数据和真实标签
+x = np.array([1.0, -1.5])
+y_true = 0.5
+
+# 学习率
+learning_rate = 0.01
+
+
+# ReLU
+def relu(x):
+	#todo 输入x 返回relu(x)
+	pass
+
+
+# ReLU 的梯度
+def relu_derivative(x):
+	return np.where(x > 0, 1, 0) 
+
+
+# 均方损失函数和其导数
+def mse_loss(y_pred, y_true):
+	#todo 计算均方误差
+	pass
+
+
+def mse_loss_derivative(y_pred, y_true):
+	return y_pred - y_true  # 对 y_pred 求导
+
+
+# 训练过程
+epochs = 100
+for epoch in range(epochs):
+	# 前向传播
+	
+	z1 = np.dot(W1, x) + b1  
+	h = relu(z1) 
+	y_pred = np.dot(W2, h) + b2 
+	
+	# 计算损失
+	loss = mse_loss(y_pred, y_true)
+	
+	# 反向传播
+	d_loss_y_pred = mse_loss_derivative(y_pred, y_true)  # 损失对预测值的梯度
+	#todo 
+	#d_loss_W2 = ?  对 W2 的梯度
+	#d_loss_b2 = ?  对 b2 的梯度
+	
+	#d_loss_h =?  损失对隐藏层输出 h 的梯度
+	#d_loss_z1 =?  隐藏层的梯度 (通过 ReLU 计算)
+	
+	#d_loss_W1 =?  对 W1 的梯度
+	#d_loss_b1 =?  对 b1 的梯度
+	
+	# 参数更新 (随机梯度下降)
+	W1 -= learning_rate * d_loss_W1
+	b1 -= learning_rate * d_loss_b1
+	W2 -= learning_rate * d_loss_W2
+	b2 -= learning_rate * d_loss_b2
+	
+	# 打印训练过程中的损失
+	if epoch % 10 == 0:
+	print(f"Epoch {epoch}: Loss = {loss}")
+
+# 打印最终的损失值
+print(f"Final Loss: {loss}")
+		\end{lstlisting}
+	\end{prob}
+	
+	\begin{sol}
+		补充部分代码如下：
+		\begin{lstlisting}[language=python,style=mystyle]
+		
+# ReLU
+def relu(x):
+	#todo 输入x 返回relu(x)
+	return np.maximum(0, x)		
+......
+		
+def mse_loss(y_pred, y_true):
+	#todo 计算均方误差
+	return np.mean((y_pred - y_true) ** 2) / 2		
+......
+
+# 反向传播
+d_loss_y_pred = mse_loss_derivative(y_pred, y_true)  # 损失对预测值的梯度
+# d_loss_W2: 损失对 W2 的梯度
+d_loss_W2 = d_loss_y_pred * h.T   # 对 W2 求导，链式法则，h 是列向量，使用 h.T 进行矩阵乘法
+# d_loss_b2: 损失对 b2 的梯度
+d_loss_b2 = d_loss_y_pred  # 对 b2 求导
+# d_loss_h: 损失对隐藏层输出 h 的梯度
+d_loss_h =  d_loss_y_pred * W2.T # 反向传播到隐藏层
+# d_loss_z1: 隐藏层的梯度 (通过 ReLU 计算)
+d_loss_z1 = d_loss_h * relu_derivative(z1)  # 通过 ReLU 的导数来计算
+# d_loss_W1: 损失对 W1 的梯度
+d_loss_W1 = np.outer(d_loss_z1, x)  # 对 W1 求导，链式法则，x 是输入
+# d_loss_b1: 损失对 b1 的梯度
+d_loss_b1 = d_loss_z1  # 对 b1 求导
+		\end{lstlisting}
+		
+	其它求导步骤都很简单，利用链式法则即可，对W1的梯度，由于W1是一个矩阵，所以求导比较复杂，代码24行具体解释如图~\ref{fig:2}。（注意这里应该每一步都有转置和每一步都没有出来是一样的，本质相同。）
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1\linewidth]{Figures/2}
+		\caption{}
+		\label{fig:2}
+	\end{figure}
+	
+	以上是全写成标量计算的，其实也能用正常方法，$x$在这里是数组形状$[x_1,x_2]$，$dz$也是$[dz_1,dz_2]$，只要计算$x^\top dz$(矩阵乘法)，也能得到一样的结果。
+	
+		
+	代码运行结果如图~\ref{fig:1}, 可以看到损失逐渐降低，最终很小，说明训练有效。
+		
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Figures/1}
+	\caption{tarin\_loss}
+	\label{fig:1}
+\end{figure}
+	\end{sol}
+	
+	
+	\begin{prob}
+		\textbf{什么是全连接网络（FC）或多层感知机（MLP）？它与线性分类器的主要区别是什么？}
+	\end{prob}
+	
+	\begin{sol}
+		解：
+		
+		
+		\textbf{全连接网络（FC）或多层感知机（MLP）}
+		
+		全连接网络（FC）或多层感知机（MLP）是一种神经网络模型，由多层神经元组成，其中每一层的每个神经元与前一层的每个神经元都有连接。它是最基础的神经网络类型之一，广泛用于分类和回归任务。
+		\begin{itemize}
+			\item \textbf{输入层}：接收原始输入数据。
+			\item \textbf{隐藏层}：通过加权和偏置进行计算，并通过激活函数进行非线性变换。
+			\item \textbf{输出层}：根据任务需求输出结果，如分类标签或回归值。
+		\end{itemize}
+		
+		MLP 是一种前馈神经网络，信息在网络中单向传播，不会有反馈连接。每一层的输出都成为下一层的输入。
+		
+		\textbf{线性分类器}
+		
+		线性分类器（如线性回归或支持向量机）通过输入特征的线性组合来做出预测，输出一个线性函数，通常表示为：
+		\[
+		y = w_1 x_1 + w_2 x_2 + \cdots + w_n x_n + b
+		\]
+		其中 \( x_1, x_2, \dots, x_n \) 是输入特征，\( w_1, w_2, \dots, w_n \) 是对应的权重，\( b \) 是偏置项。
+		
+		而多层感知机通过多个层级和非线性激活函数的组合，可以拟合更复杂的非线性关系。每一层的输出通过激活函数进行非线性变换，从而具有更强的表达能力。
+		
+		\textbf{主要区别}
+		\begin{itemize}
+			\item \textbf{线性与非线性}：
+			\begin{itemize}
+				\item 线性分类器只能表示输入特征的线性关系。
+				\item MLP 使用非线性激活函数，使其能够学习复杂的非线性关系。
+			\end{itemize}
+			\item \textbf{层次结构}：
+			\begin{itemize}
+				\item 线性分类器只有一个层次，直接从输入到输出。
+				\item MLP 由多层组成，包括至少一个隐藏层。
+			\end{itemize}
+			\item \textbf{表达能力}：
+			\begin{itemize}
+				\item 线性分类器的表达能力较弱，一般仅适用于线性可分的任务。
+				\item MLP 可以逼近任何复杂的函数，适用于更广泛的任务。
+			\end{itemize}
+		\end{itemize}
+	\end{sol}
+	
+	\begin{prob}
+		\textbf{在梯度流的基本计算模式中，加法门(add gate)、乘法门(mul gate)和最大值门(max gate)分别具有什么特点？}
+	\end{prob}
+	
+	\begin{sol}
+		解：\\
+		\textbf{加法门：}加法门不改变梯度，只是将梯度传递到所有输入。
+		
+		\textbf{乘法门：}乘法门会将梯度乘以其他输入的乘积（假设是多个，如果是两个输入的乘法则是另一个输入）传到这个输入。
+		
+		\textbf{最大值门：}最大值门会将梯度传递给选择出的最大值，但如果最大值有多个，则平分梯度。
+		
+		直观展示见图~\ref{fig:3}。
+		
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\linewidth]{Figures/3}
+	\caption{}
+	\label{fig:3}
+\end{figure}
+		
+		
+	\end{sol}
+	
+
+\end{document}
